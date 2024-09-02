@@ -1,27 +1,97 @@
-# AngularReduxWorkspace
+# Angular Redux
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.2.
+Unofficial Angular bindings for [Redux](https://github.com/reduxjs/redux).
+Performant and flexible.
 
-## Development server
+# Features
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- Compatible with Angular 18+
+- [Signals](https://angular.dev/guide/signals) support
+- [Redux Toolkit](https://redux-toolkit.js.org/) support
 
-## Code scaffolding
+# Usage
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+The following Angular component works as-expected:
 
-## Build
+```angular-ts
+import { Component } from '@angular/core'
+import {injectSelector, injectDispatch} from "angular-redux";
+import { decrement, increment, RootState  } from './store/counter-slice'
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [],
+  template: `
+    <div>
+      <div>
+        <button
+          aria-label="Increment value"
+          (click)="dispatch(increment())"
+        >
+          Increment
+        </button>
+        <span>{{ count() }}</span>
+        <button
+          aria-label="Decrement value"
+          (click)="dispatch(decrement())"
+        >
+          Decrement
+        </button>
+      </div>
+    </div>
+  `
+})
+export class AppComponent {
+  count = injectSelector((state: RootState) => state.counter.value)
+  dispatch = injectDispatch()
+  increment = increment
+  decrement = decrement
+}
+```
 
-## Running unit tests
+Assuming the following `store.ts` file is present:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```typescript
+import { PayloadAction, configureStore, createSlice } from '@reduxjs/toolkit'
 
-## Running end-to-end tests
+export interface CounterState {
+  value: number
+}
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+const initialState: CounterState = {
+  value: 0,
+}
 
-## Further help
+export const counterSlice = createSlice({
+  name: 'counter',
+  initialState,
+  reducers: {
+    increment: (state) => {
+      // Redux Toolkit allows us to write "mutating" logic in reducers. It
+      // doesn't actually mutate the state because it uses the Immer library,
+      // which detects changes to a "draft state" and produces a brand new
+      // immutable state based off those changes
+      state.value += 1
+    },
+    decrement: (state) => {
+      state.value -= 1
+    },
+    incrementByAmount: (state, action: PayloadAction<number>) => {
+      state.value += action.payload
+    },
+  },
+})
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+// Action creators are generated for each case reducer function
+export const { increment, decrement, incrementByAmount } = counterSlice.actions
+
+export const store = configureStore({
+  reducer: {
+    counter: counterSlice.reducer,
+  },
+})
+
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch
+```
