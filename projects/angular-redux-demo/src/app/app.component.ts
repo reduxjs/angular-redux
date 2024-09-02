@@ -1,16 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core'
+import { ReduxProvider } from 'angular-redux'
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [],
   template: `
-    <h1>Welcome to {{title}}!</h1>
-
-    
-  `,
-  styles: [],
+    <div>
+      {{data.message}}
+    </div>
+  `
 })
 export class AppComponent {
-  title = 'angular-redux-demo';
+  data = inject(ReduxProvider)
 }

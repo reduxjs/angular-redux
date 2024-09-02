@@ -2,5 +2,6 @@
  * Public API Surface of angular-redux
  */
 
-export * from './lib/angular-redux.service';
-export * from './lib/angular-redux.component';
+export * from './lib/inject-dispatch';
+export * from './lib/inject-selector';
+export * from './lib/provide-redux';
