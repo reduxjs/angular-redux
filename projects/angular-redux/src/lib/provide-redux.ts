@@ -14,8 +14,12 @@ export interface ProviderProps<
 export function provideRedux<A extends Action<string> = UnknownAction, S = unknown>({
   store
 }: ProviderProps<A, S>) {
-  return [{
+  return {
     provide: ReduxProvider,
-    useValue: new ReduxProvider(store)
-  }]
+    useValue: (() => {
+      const provider = new ReduxProvider<A, S>();
+      provider.store = store;
+      return provider;
+    })()
+  }
 }
