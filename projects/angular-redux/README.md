@@ -1,24 +1,97 @@
-# AngularRedux
+# Angular Redux
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.0.
+Unofficial Angular bindings for [Redux](https://github.com/reduxjs/redux).
+Performant and flexible.
 
-## Code scaffolding
+# Features
 
-Run `ng generate component component-name --project angular-redux` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project angular-redux`.
-> Note: Don't forget to add `--project angular-redux` or else it will be added to the default project in your `angular.json` file. 
+- Compatible with Angular 18+
+- [Signals](https://angular.dev/guide/signals) support
+- [Redux Toolkit](https://redux-toolkit.js.org/) support
 
-## Build
+# Usage
 
-Run `ng build angular-redux` to build the project. The build artifacts will be stored in the `dist/` directory.
+The following Angular component works as-expected:
 
-## Publishing
+```angular-ts
+import { Component } from '@angular/core'
+import {injectSelector, injectDispatch} from "angular-redux";
+import { decrement, increment, RootState  } from './store/counter-slice'
 
-After building your library with `ng build angular-redux`, go to the dist folder `cd dist/angular-redux` and run `npm publish`.
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [],
+  template: `
+    <div>
+      <div>
+        <button
+          aria-label="Increment value"
+          (click)="dispatch(increment())"
+        >
+          Increment
+        </button>
+        <span>{{ count() }}</span>
+        <button
+          aria-label="Decrement value"
+          (click)="dispatch(decrement())"
+        >
+          Decrement
+        </button>
+      </div>
+    </div>
+  `
+})
+export class AppComponent {
+  count = injectSelector((state: RootState) => state.counter.value)
+  dispatch = injectDispatch()
+  increment = increment
+  decrement = decrement
+}
+```
 
-## Running unit tests
+Assuming the following `store.ts` file is present:
 
-Run `ng test angular-redux` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```typescript
+import { PayloadAction, configureStore, createSlice } from '@reduxjs/toolkit'
 
-## Further help
+export interface CounterState {
+  value: number
+}
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+const initialState: CounterState = {
+  value: 0,
+}
+
+export const counterSlice = createSlice({
+  name: 'counter',
+  initialState,
+  reducers: {
+    increment: (state) => {
+      // Redux Toolkit allows us to write "mutating" logic in reducers. It
+      // doesn't actually mutate the state because it uses the Immer library,
+      // which detects changes to a "draft state" and produces a brand new
+      // immutable state based off those changes
+      state.value += 1
+    },
+    decrement: (state) => {
+      state.value -= 1
+    },
+    incrementByAmount: (state, action: PayloadAction<number>) => {
+      state.value += action.payload
+    },
+  },
+})
+
+// Action creators are generated for each case reducer function
+export const { increment, decrement, incrementByAmount } = counterSlice.actions
+
+export const store = configureStore({
+  reducer: {
+    counter: counterSlice.reducer,
+  },
+})
+
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch
+```
