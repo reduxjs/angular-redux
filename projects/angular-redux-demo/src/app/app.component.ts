@@ -1,5 +1,6 @@
-import { Component, inject } from '@angular/core'
-import { ReduxProvider } from 'angular-redux'
+import { Component } from '@angular/core'
+import { injectSelector } from 'angular-redux'
+import { RootState } from './store'
 
 @Component({
   selector: 'app-root',
@@ -7,10 +8,10 @@ import { ReduxProvider } from 'angular-redux'
   imports: [],
   template: `
     <div>
-      {{data.message}}
+      {{count}}
     </div>
   `
 })
 export class AppComponent {
-  data = inject(ReduxProvider)
+  count = injectSelector((state: RootState) => state.counter.value)
 }
