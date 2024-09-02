@@ -1,5 +1,5 @@
 import { EqualityFn } from './types'
-import { inject } from '@angular/core'
+import { effect, inject, Signal, signal } from '@angular/core'
 import { ReduxProvider } from './provider'
 
 export interface UseSelectorOptions<Selected = unknown> {
@@ -12,7 +12,7 @@ const refEquality: EqualityFn<any> = (a, b) => a === b
 export function injectSelector<TState = unknown, Selected = unknown>(
   selector: (state: TState) => Selected,
   equalityFnOrOptions?: EqualityFn<Selected> | UseSelectorOptions<Selected>,
-): Selected {
+): Signal<Selected> {
   const reduxContext = inject(ReduxProvider);
 
   // const { equalityFn = refEquality } =
@@ -24,7 +24,17 @@ export function injectSelector<TState = unknown, Selected = unknown>(
     store
   } = reduxContext
 
-  const selectedState = selector(store.getState())
+  const selectedState = signal(selector(store.getState()))
+
+  effect((onCleanup) => {
+    const unsubscribe = store.subscribe(() => {
+      selectedState.set(selector(store.getState()))
+    })
+
+    onCleanup(() => {
+      unsubscribe()
+    })
+  })
 
   return selectedState
 }

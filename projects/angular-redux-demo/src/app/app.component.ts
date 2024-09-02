@@ -1,5 +1,5 @@
-import { Component, effect, signal } from '@angular/core'
-import {injectSelector, injectDispatch, injectStore} from "angular-redux";
+import { Component } from '@angular/core'
+import {injectSelector, injectDispatch} from "angular-redux";
 import { decrement, increment } from './store/counter-slice'
 import { RootState } from './store'
 
@@ -16,7 +16,7 @@ import { RootState } from './store'
         >
           Increment
         </button>
-        <span>{{ count }}</span>
+        <span>{{ count() }}</span>
         <button
           aria-label="Decrement value"
           (click)="dispatch(decrement())"
@@ -30,22 +30,6 @@ import { RootState } from './store'
 export class AppComponent {
   count = injectSelector((state: RootState) => state.counter.value)
   dispatch = injectDispatch()
-
-  store = injectStore()
-
-  val = signal(0);
-  _test = effect(() => {
-    if (this.val()) {
-      console.log((this.store.getState() as any).counter.value)
-    }
-  })
-
-  increment = () => {
-    setTimeout(() => this.val.set(this.val() + 1), 100)
-    return increment()
-  };
-  decrement = () => {
-    setTimeout(() => this.val.set(this.val() + 1), 100)
-    return decrement()
-  };
+  increment = increment
+  decrement = decrement
 }
