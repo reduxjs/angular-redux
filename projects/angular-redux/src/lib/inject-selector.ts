@@ -1,5 +1,5 @@
 import { EqualityFn } from './types'
-import { effect, inject, Signal, signal } from '@angular/core'
+import { assertInInjectionContext, effect, inject, Signal, signal } from '@angular/core'
 import { ReduxProvider } from './provider'
 
 export interface UseSelectorOptions<Selected = unknown> {
@@ -13,6 +13,7 @@ export function injectSelector<TState = unknown, Selected = unknown>(
   selector: (state: TState) => Selected,
   equalityFnOrOptions?: EqualityFn<Selected> | UseSelectorOptions<Selected>,
 ): Signal<Selected> {
+  assertInInjectionContext(injectSelector)
   const reduxContext = inject(ReduxProvider);
 
   // const { equalityFn = refEquality } =

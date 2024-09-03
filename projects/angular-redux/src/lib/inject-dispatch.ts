@@ -1,12 +1,10 @@
-import type { Action, Dispatch, UnknownAction } from 'redux'
-import { ReduxProvider } from './provider'
-import { inject } from '@angular/core'
+import type { Dispatch, UnknownAction } from 'redux'
+import { assertInInjectionContext } from '@angular/core'
+import { injectStore } from './inject-store'
 
 // TODO: Add `withTypes` support
 export function injectDispatch<AppDispatch extends Dispatch<UnknownAction> = Dispatch<UnknownAction>>(): AppDispatch {
-  const context = inject(ReduxProvider)
-  // TODO: assertInInjectionContext
-  const { store } = context
-
+  assertInInjectionContext(injectDispatch)
+  const store = injectStore();
   return store.dispatch as AppDispatch
 }
