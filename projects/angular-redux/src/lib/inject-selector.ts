@@ -11,25 +11,31 @@ const refEquality: EqualityFn<any> = (a, b) => a === b
 // TODO: Add support for `withTypes`
 export function injectSelector<TState = unknown, Selected = unknown>(
   selector: (state: TState) => Selected,
-  equalityFnOrOptions?: EqualityFn<Selected> | UseSelectorOptions<Selected>,
+  equalityFnOrOptions: EqualityFn<Selected> | UseSelectorOptions<Selected> = {},
 ): Signal<Selected> {
   assertInInjectionContext(injectSelector)
   const reduxContext = inject(ReduxProvider);
 
-  // const { equalityFn = refEquality } =
-  //   typeof equalityFnOrOptions === 'function'
-  //     ? { equalityFn: equalityFnOrOptions }
-  //     : equalityFnOrOptions
+  const { equalityFn = refEquality } =
+    typeof equalityFnOrOptions === 'function'
+      ? { equalityFn: equalityFnOrOptions }
+      : equalityFnOrOptions
 
   const {
-    store
+    store,
+    subscription
   } = reduxContext
 
   const selectedState = signal(selector(store.getState()))
 
   effect((onCleanup) => {
-    const unsubscribe = store.subscribe(() => {
-      selectedState.set(selector(store.getState()))
+    const unsubscribe = subscription.addNestedSub(() => {
+      const data = selector(store.getState());
+      if (equalityFn(selectedState(), data)) {
+        return
+      }
+
+      selectedState.set(data);
     })
 
     onCleanup(() => {
