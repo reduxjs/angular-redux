@@ -1,12 +1,15 @@
 {
   "name": "@reduxjs/angular-redux",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "keywords": [
     "angular",
     "redux"
   ],
   "license": "MIT",
   "author": "Corbin Cruthcley <git@crutchcorn.dev> (https://github.com/crutchcorn)",
+  "homepage": "https://github.com/reduxjs/angular-redux",
+  "repository": "github:reduxjs/angular-redux",
+  "bugs": "https://github.com/reduxjs/angular-redux/issues",
   "peerDependencies": {
     "@angular/common": ">=17.3.0",
     "@angular/core": ">=17.3.0",
