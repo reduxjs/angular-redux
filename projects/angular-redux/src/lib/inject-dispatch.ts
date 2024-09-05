@@ -72,7 +72,7 @@ export function createDispatchInjection<
  *
  * @example
  *
- * import { injectDispatch } from 'angular-redux'
+ * import { injectDispatch } from '@reduxjs/angular-redux'
  *
  * @Component({
  *   selector: 'example-component',

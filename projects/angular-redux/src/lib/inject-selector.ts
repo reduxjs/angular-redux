@@ -125,7 +125,7 @@ export function createSelectorInjection(): InjectSelector {
  *
  * @example
  *
- * import { injectSelector } from 'angular-redux'
+ * import { injectSelector } from '@reduxjs/angular-redux'
  *
  * @Component({
  *   selector: 'counter-component',

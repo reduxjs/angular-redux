@@ -3,14 +3,33 @@
 Official Angular bindings for [Redux](https://github.com/reduxjs/redux).
 Performant and flexible.
 
+
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/reduxjs/angular-redux/test.yml?style=flat-square) [![npm version](https://img.shields.io/npm/v/@reduxjs/angular.svg?style=flat-square)](https://www.npmjs.com/package/@reduxjs/angular)
+[![npm downloads](https://img.shields.io/npm/dm/@reduxjs/angular.svg?style=flat-square)](https://www.npmjs.com/package/@reduxjs/angular)
+
 > [!WARNING]  
 > This package is in alpha and is rapidly developing.
 
-# Features
+## Installation
 
-- Compatible with Angular 18+
-- [Signals](https://angular.dev/guide/signals) support
-- [Redux Toolkit](https://redux-toolkit.js.org/) support
+Angular Redux requires **Angular 17.3 or later**.
+
+To use React Redux with your Angular app, install it as a dependency:
+
+```bash
+# If you use npm:
+npm install @reduxjs/angular-redux
+
+# Or if you use Yarn:
+yarn add @reduxjs/angular-redux
+```
+
+You'll also need to [install Redux](https://redux.js.org/introduction/installation) and [set up a Redux store](https://redux.js.org/recipes/configuring-your-store/) in your app.
+
+This assumes that you’re using [npm](http://npmjs.com/) package manager
+with a module bundler like [Webpack](https://webpack.js.org/) or
+[Browserify](http://browserify.org/) to consume [CommonJS
+modules](https://webpack.js.org/api/module-methods/#commonjs).
 
 # Usage
 
@@ -18,7 +37,7 @@ The following Angular component works as-expected:
 
 ```angular-ts
 import { Component } from '@angular/core'
-import {injectSelector, injectDispatch} from "angular-redux";
+import {injectSelector, injectDispatch} from "@reduxjs/angular-redux";
 import { decrement, increment, RootState  } from './store/counter-slice'
 
 @Component({
@@ -51,50 +70,4 @@ export class AppComponent {
   increment = increment
   decrement = decrement
 }
-```
-
-Assuming the following `store.ts` file is present:
-
-```typescript
-import { PayloadAction, configureStore, createSlice } from '@reduxjs/toolkit'
-
-export interface CounterState {
-  value: number
-}
-
-const initialState: CounterState = {
-  value: 0,
-}
-
-export const counterSlice = createSlice({
-  name: 'counter',
-  initialState,
-  reducers: {
-    increment: (state) => {
-      // Redux Toolkit allows us to write "mutating" logic in reducers. It
-      // doesn't actually mutate the state because it uses the Immer library,
-      // which detects changes to a "draft state" and produces a brand new
-      // immutable state based off those changes
-      state.value += 1
-    },
-    decrement: (state) => {
-      state.value -= 1
-    },
-    incrementByAmount: (state, action: PayloadAction<number>) => {
-      state.value += action.payload
-    },
-  },
-})
-
-// Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = counterSlice.actions
-
-export const store = configureStore({
-  reducer: {
-    counter: counterSlice.reducer,
-  },
-})
-
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
 ```

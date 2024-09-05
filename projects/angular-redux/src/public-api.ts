@@ -1,5 +1,5 @@
 /*
- * Public API Surface of angular-redux
+ * Public API Surface of @reduxjs/angular-redux
  */
 
 export * from './lib/inject-dispatch';

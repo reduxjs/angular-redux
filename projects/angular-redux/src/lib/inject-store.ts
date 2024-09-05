@@ -93,7 +93,7 @@ export function createStoreInjection<
  *
  * @example
  *
- * import { injectStore } from 'angular-redux'
+ * import { injectStore } from '@reduxjs/angular-redux'
  *
  * @Component({
  *   selector: 'example-component',
