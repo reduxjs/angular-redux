@@ -4,8 +4,8 @@ Official Angular bindings for [Redux](https://github.com/reduxjs/redux).
 Performant and flexible.
 
 
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/reduxjs/angular-redux/test.yml?style=flat-square) [![npm version](https://img.shields.io/npm/v/@reduxjs/angular.svg?style=flat-square)](https://www.npmjs.com/package/@reduxjs/angular)
-[![npm downloads](https://img.shields.io/npm/dm/@reduxjs/angular.svg?style=flat-square)](https://www.npmjs.com/package/@reduxjs/angular)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/reduxjs/angular-redux/test.yml?style=flat-square) [![npm version](https://img.shields.io/npm/v/@reduxjs/angular-redux.svg?style=flat-square)](https://www.npmjs.com/package/@reduxjs/angular-redux)
+[![npm downloads](https://img.shields.io/npm/dm/@reduxjs/angular-redux.svg?style=flat-square)](https://www.npmjs.com/package/@reduxjs/angular-redux)
 
 > [!WARNING]  
 > This package is in alpha and is rapidly developing.
