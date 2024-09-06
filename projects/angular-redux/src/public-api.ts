@@ -7,3 +7,4 @@ export * from './lib/inject-selector';
 export * from './lib/inject-store';
 export * from './lib/provide-redux';
 export * from "./lib/provider"
+export * from "./lib/utils/shallowEqual"

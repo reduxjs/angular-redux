@@ -1,4 +1,4 @@
-import {InjectSelector, injectSelector, provideRedux, ReduxProvider} from '../public-api'
+import {InjectSelector, injectSelector, provideRedux, ReduxProvider, shallowEqual} from '../public-api'
 import {Component, effect, inject} from "@angular/core";
 import {render, waitFor} from "@testing-library/angular";
 import {AnyAction, createStore, Store} from "redux";
@@ -192,4 +192,145 @@ describe('injectSelector lifecycle interactions', () => {
       expect(appSubscription!.getListeners().get().length).toBe(1)
     )
   })
+});
+
+describe('performance optimizations and bail-outs', () => {
+  it('defaults to ref-equality to prevent unnecessary updates', async () => {
+    const state = {}
+    const store = createStore(() => state)
+
+    @Component({
+      selector: "app-root",
+      standalone: true,
+      template: "<div></div>"
+    })
+    class Comp {
+      value = injectSelector((s) => s)
+      _test = effect(() => {
+        renderedItems.push(this.value())
+      })
+    }
+
+    await render(Comp, {
+      providers: [provideRedux({store})]
+    })
+
+
+    expect(renderedItems.length).toBe(1)
+
+    store.dispatch({type: ''})
+
+    await waitFor(() =>
+      expect(renderedItems.length).toBe(1)
+    )
+  })
+
+  it('allows other equality functions to prevent unnecessary updates', async () => {
+    interface StateType {
+      count: number
+      stable: {}
+    }
+
+    const store = createStore(
+      ({count, stable}: StateType = {count: -1, stable: {}}) => ({
+        count: count + 1,
+        stable,
+      }),
+    )
+
+    @Component({
+      selector: "app-comp",
+      standalone: true,
+      template: "<div></div>"
+    })
+    class Comp {
+      value = injectSelector(
+        (s: StateType) => Object.keys(s),
+        shallowEqual,
+      )
+      _test = effect(() => {
+        renderedItems.push(this.value())
+      })
+    }
+
+    @Component({
+      selector: "app-other",
+      standalone: true,
+      template: "<div></div>"
+    })
+    class Comp2 {
+      value = injectSelector((s: StateType) => Object.keys(s), {
+        equalityFn: shallowEqual,
+      })
+      _test = effect(() => {
+        renderedItems.push(this.value())
+      })
+    }
+
+    @Component({
+      selector: "app-root",
+      standalone: true,
+      imports: [Comp, Comp2],
+      template: `
+        <app-comp/>
+        <app-other/>
+      `
+    })
+    class App {
+    }
+
+    await render(App, {
+      providers: [provideRedux({store})]
+    })
+
+    expect(renderedItems.length).toBe(2)
+
+    store.dispatch({type: ''})
+
+    await waitFor(() =>
+      expect(renderedItems.length).toBe(2)
+    )
+  });
+
+  it('calls selector exactly once on mount and on update', async () => {
+    interface StateType {
+      count: number
+    }
+
+    const store = createStore(({count}: StateType = {count: 0}) => ({
+      count: count + 1,
+    }))
+
+    const selector = jest.fn((s: StateType) => {
+      return s.count
+    })
+    const renderedItems: number[] = []
+
+
+    @Component({
+      selector: "app-root",
+      standalone: true,
+      template: "<div></div>"
+    })
+    class Comp {
+      value = injectSelector(selector)
+      _test = effect(() => {
+        renderedItems.push(this.value())
+      })
+    }
+
+    await render(Comp, {
+      providers: [provideRedux({store})]
+    })
+
+    expect(selector).toHaveBeenCalledTimes(1)
+    expect(renderedItems.length).toEqual(1)
+
+    store.dispatch({type: ''})
+
+    await waitFor(() =>
+      expect(selector).toHaveBeenCalledTimes(2)
+    )
+    expect(renderedItems.length).toEqual(2)
+  });
 });
