@@ -1,8 +1,9 @@
-import {InjectSelector, injectSelector, provideRedux} from '../public-api'
-import {Component} from "@angular/core";
-import {render} from "@testing-library/angular";
+import {InjectSelector, injectSelector, provideRedux, ReduxProvider} from '../public-api'
+import {Component, effect, inject} from "@angular/core";
+import {render, waitFor} from "@testing-library/angular";
 import {AnyAction, createStore, Store} from "redux";
 import '@testing-library/jest-dom';
+import {Subscription} from "../lib/utils/Subscription";
 
 type NormalStateType = {
   count: number
@@ -58,10 +59,137 @@ describe('injectSelector core subscription behavior', () => {
     expect(await findByText("Count: 0")).toBeInTheDocument();
     expect(selector).toHaveBeenCalledTimes(1)
 
-    normalStore.dispatch({ type: '' })
+    normalStore.dispatch({type: ''})
 
 
     expect(await findByText("Count: 1")).toBeInTheDocument();
     expect(selector).toHaveBeenCalledTimes(2)
   })
 })
+
+describe('injectSelector lifecycle interactions', () => {
+  it('always uses the latest state', async () => {
+    const store = createStore((c: number = 1): number => c + 1, -1)
+
+    @Component({
+      selector: "app-root",
+      standalone: true,
+      template: "<div></div>"
+    })
+    class Testing {
+      selector = (c: number): number => c + 1
+      value = injectSelector(this.selector)
+      _test = effect(() => {
+        renderedItems.push(this.value())
+      })
+    }
+
+    await render(Testing, {
+      providers: [provideRedux({store})]
+    })
+
+    expect(renderedItems).toEqual([1])
+
+    store.dispatch({type: ''})
+
+    await waitFor(() =>
+      expect(renderedItems).toEqual([1, 2])
+    )
+  })
+
+  it('subscribes to the store synchronously', async () => {
+    let appSubscription: Subscription | null = null
+
+    @Component({
+      selector: "child-root",
+      standalone: true,
+      template: "<div>{{count()}}</div>"
+    })
+    class Child {
+      count = injectNormalSelector((s) => s.count)
+    }
+
+    function injectReduxAndAssignApp() {
+      const contextVal = inject(ReduxProvider);
+      appSubscription = contextVal && contextVal.subscription
+      return contextVal;
+    }
+
+    @Component({
+      selector: "app-root",
+      standalone: true,
+      imports: [Child],
+      template: `
+        @if (count() === 1) {
+          <child-root/>
+        }
+      `
+    })
+    class Parent {
+      contextVal = injectReduxAndAssignApp();
+      count = injectNormalSelector((s) => s.count)
+    }
+
+    await render(Parent, {
+      providers: [provideRedux({store: normalStore})]
+    })
+
+    // Parent component only
+    expect(appSubscription!.getListeners().get().length).toBe(1)
+
+    normalStore.dispatch({type: ''})
+
+    // Parent component + 1 child component
+    await waitFor(() =>
+      expect(appSubscription!.getListeners().get().length).toBe(2)
+    )
+  })
+
+  it('unsubscribes when the component is unmounted', async () => {
+    let appSubscription: Subscription | null = null
+
+    @Component({
+      selector: "child-root",
+      standalone: true,
+      template: "<div>{{count()}}</div>"
+    })
+    class Child {
+      count = injectNormalSelector((s) => s.count)
+    }
+
+    function injectReduxAndAssignApp() {
+      const contextVal = inject(ReduxProvider);
+      appSubscription = contextVal && contextVal.subscription
+      return contextVal;
+    }
+
+    @Component({
+      selector: "app-root",
+      standalone: true,
+      imports: [Child],
+      template: `
+        @if (count() === 0) {
+          <child-root/>
+        }
+      `
+    })
+    class Parent {
+      contextVal = injectReduxAndAssignApp();
+      count = injectNormalSelector((s) => s.count)
+    }
+
+    await render(Parent, {
+      providers: [provideRedux({store: normalStore})]
+    })
+
+    // Parent component only
+    expect(appSubscription!.getListeners().get().length).toBe(2)
+
+    normalStore.dispatch({type: ''})
+
+    // Parent component + 1 child component
+    await waitFor(() =>
+      expect(appSubscription!.getListeners().get().length).toBe(1)
+    )
+  })
+});
