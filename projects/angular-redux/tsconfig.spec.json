@@ -12,5 +12,9 @@
   "include": [
     "**/*.spec.ts",
     "**/*.d.ts"
+  ],
+  "exclude": [
+    "./schematics/**/*.ts",
+    "./schematics-core/**/*.ts"
   ]
 }
