@@ -101,11 +101,11 @@ describe('Store ng-add Schematic', () => {
       const content = tree.readContent(`${projectPath}/src/app/app.config.ts`);
       const files = tree.files;
 
-      expect(content).toMatch(/provideStore\(\)/);
-      expect(content).not.toMatch(
+      expect(content).toMatch(/provideRedux\(\{ store \}\)/);
+      expect(content).toMatch(
         /import { store } from '\.\/store';/
       );
-      expect(files.indexOf(`${projectPath}/src/app/store/index.ts`)).toBe(
+      expect(files.indexOf(`${projectPath}/src/app/store/index.ts`)).not.toBe(
         -1
       );
     });

@@ -94,7 +94,7 @@ function addImportToNgModule(options: AngularReduxOptions): Rule {
   };
 }
 
-const angularReduxPackageMeta = fs.readFileSync(path.resolve(__dirname, '../../package.json')) as unknown as {
+const angularReduxPackageMeta = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../package.json'), "utf8")) as unknown as {
   version: string;
   peerDependencies: {
     [key: string]: string;
