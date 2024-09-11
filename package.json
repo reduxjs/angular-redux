@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build angular-redux && tsc -p projects/angular-redux/tsconfig.schematics.json && yarn build:copy",
-    "build:copy": "cd ./projects/angular-redux/schematics && copyfiles \"**/*.json\" ../../../dist/angular-redux/schematics",
+    "build:copy": "cd ./projects/angular-redux/schematics && copyfiles \"**/*.json\" ../../../dist/angular-redux/schematics && copyfiles \"**/*.template\" ../../../dist/angular-redux/schematics",
     "build:ng": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "yarn test:ng && yarn test:schematics",
