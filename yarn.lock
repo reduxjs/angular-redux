@@ -3155,6 +3155,7 @@ __metadata:
     "@testing-library/user-event": "npm:^14.5.2"
     "@types/jasmine": "npm:~5.1.0"
     "@types/jest": "npm:^29.5.12"
+    "@types/node": "npm:^22.5.4"
     jasmine-core: "npm:~5.2.0"
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.7.0"
@@ -3164,6 +3165,21 @@ __metadata:
     tslib: "npm:^2.3.0"
     typescript: "npm:~5.5.2"
     zone.js: "npm:~0.14.10"
+  languageName: unknown
+  linkType: soft
+
+"@reduxjs/angular-redux@workspace:projects/angular-redux":
+  version: 0.0.0-use.local
+  resolution: "@reduxjs/angular-redux@workspace:projects/angular-redux"
+  dependencies:
+    tslib: "npm:^2.3.0"
+  peerDependencies:
+    "@angular/common": ">=17.3.0"
+    "@angular/core": ">=17.3.0"
+    redux: ^5.0.0
+  peerDependenciesMeta:
+    redux:
+      optional: true
   languageName: unknown
   linkType: soft
 
@@ -3887,7 +3903,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^22.5.2":
+"@types/node@npm:*, @types/node@npm:^22.5.2, @types/node@npm:^22.5.4":
   version: 22.5.4
   resolution: "@types/node@npm:22.5.4"
   dependencies:

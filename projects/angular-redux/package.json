@@ -13,13 +13,18 @@
   "peerDependencies": {
     "@angular/common": ">=17.3.0",
     "@angular/core": ">=17.3.0",
-    "redux": "^5.0.0"
+    "redux": "^5.0.0",
+    "@reduxjs/toolkit": "^2.2.7"
   },
   "peerDependenciesMeta": {
     "redux": {
       "optional": true
+    },
+    "@reduxjs/toolkit": {
+      "optional": true
     }
   },
+  "schematics": "./schematics/collection.json",
   "dependencies": {
     "tslib": "^2.3.0"
   },
