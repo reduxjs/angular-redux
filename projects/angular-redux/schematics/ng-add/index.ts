@@ -1,6 +1,5 @@
 import * as fs from "fs";
 import * as path from "path";
-import { fileURLToPath } from 'url';
 import * as ts from 'typescript';
 import {
   Rule,
@@ -95,10 +94,7 @@ function addImportToNgModule(options: AngularReduxOptions): Rule {
   };
 }
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const angularReduxPackageMeta = fs.readFile(path.resolve(__dirname, '../../package.json')) as {
+const angularReduxPackageMeta = fs.readFileSync(path.resolve(__dirname, '../../package.json')) as unknown as {
   version: string;
   peerDependencies: {
     [key: string]: string;

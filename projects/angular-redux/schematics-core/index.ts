@@ -69,8 +69,6 @@ export const stringUtils = {
   pluralize,
 };
 
-export { updatePackage } from './utility/update';
-
 export { parseName } from './utility/parse-name';
 
 export { addPackageToPackageJson } from './utility/package';

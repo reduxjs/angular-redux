@@ -13,14 +13,14 @@
   "peerDependencies": {
     "@angular/common": ">=17.3.0",
     "@angular/core": ">=17.3.0",
-    "redux": "^5.0.0",
-    "@reduxjs/toolkit": "^2.2.7"
+    "@reduxjs/toolkit": "^2.2.7",
+    "redux": "^5.0.0"
   },
   "peerDependenciesMeta": {
-    "redux": {
+    "@reduxjs/toolkit": {
       "optional": true
     },
-    "@reduxjs/toolkit": {
+    "redux": {
       "optional": true
     }
   },
