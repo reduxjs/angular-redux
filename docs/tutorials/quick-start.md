@@ -7,49 +7,47 @@ hide_title: true
 
 &nbsp;
 
-# React Redux Quick Start
+# Angular Redux Quick Start
 
 :::tip What You'll Learn
 
-- How to set up and use Redux Toolkit with React Redux
+- How to set up and use Redux Toolkit with Angular Redux
 
 :::
 
 :::info Prerequisites
 
 - Familiarity with [ES6 syntax and features](https://www.taniarascia.com/es6-syntax-and-feature-overview/)
-- Knowledge of React terminology: [JSX](https://react.dev/learn/writing-markup-with-jsx), [State](https://react.dev/learn/state-a-components-memory), [Function Components, Props](https://react.dev/learn/passing-props-to-a-component), and [Hooks](https://react.dev/reference/react#)
+- Knowledge of Angular terminology: [State](https://angular.dev/essentials/managing-dynamic-data), [Components, Props](https://angular.dev/essentials/components), and [Signals](https://angular.dev/guide/signals)
 - Understanding of [Redux terms and concepts](https://redux.js.org/tutorials/fundamentals/part-2-concepts-data-flow)
 
 :::
 
 ## Introduction
 
-Welcome to the React Redux Quick Start tutorial! **This tutorial will briefly introduce you to React Redux and teach you how to start using it correctly**.
+Welcome to the Angular Redux Quick Start tutorial! **This tutorial will briefly introduce you to Angular Redux and teach you how to start using it correctly**.
 
 ### How to Read This Tutorial
 
 This page will focus on just how to set up a Redux application with Redux Toolkit and the main APIs you'll use. For explanations of what Redux is, how it works, and full examples of how to use Redux Toolkit, see [the Redux core docs tutorials](https://redux.js.org/tutorials/index).
 
-For this tutorial, we assume that you're using Redux Toolkit and React Redux together, as that is the standard Redux usage pattern. The examples are based on [a typical Create-React-App folder structure](https://create-react-app.dev/docs/folder-structure) where all the application code is in a `src`, but the patterns can be adapted to whatever project or folder setup you're using.
-
-The [Redux+JS template for Create-React-App](https://github.com/reduxjs/cra-template-redux) comes with this same project setup already configured.
+For this tutorial, we assume that you're using Redux Toolkit and Angular Redux together, as that is the standard Redux usage pattern. The examples are based on [a typical Angular CLI folder structure](https://angular.dev/tools/cli) where all the application code is in a `src`, but the patterns can be adapted to whatever project or folder setup you're using.
 
 ## Usage Summary
 
-### Install Redux Toolkit and React Redux
+### Install Redux Toolkit and Angular Redux
 
-Add the Redux Toolkit and React Redux packages to your project:
+Add the Redux Toolkit and Angular Redux packages to your project:
 
 ```sh
-npm install @reduxjs/toolkit react-redux
+npm install @reduxjs/toolkit angular-redux
 ```
 
 ### Create a Redux Store
 
 Create a file named `src/app/store.js`. Import the `configureStore` API from Redux Toolkit. We'll start by creating an empty Redux store, and exporting it:
 
-```js title="app/store.js"
+```typescript title="app/store.js"
 import { configureStore } from '@reduxjs/toolkit'
 
 export default configureStore({
@@ -59,29 +57,25 @@ export default configureStore({
 
 This creates a Redux store, and also automatically configure the Redux DevTools extension so that you can inspect the store while developing.
 
-### Provide the Redux Store to React
+### Provide the Redux Store to Angular
 
-Once the store is created, we can make it available to our React components by putting a React Redux `<Provider>` around our application in `src/index.js`. Import the Redux store we just created, put a `<Provider>` around your `<App>`, and pass the store as a prop:
+Once the store is created, we can make it available to our Angular components by putting an Angular Redux `provideRedux` in our application's `providers` array in `src/main.ts`. Import the Redux store we just created, put a `provideRedux` in your application's `providers` array, and pass the store as a prop:
 
-```js title="index.js"
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import './index.css'
-import App from './App'
+```typescript title="main.ts"
+
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app/app.component';
 // highlight-start
-import store from './app/store'
-import { Provider } from 'react-redux'
+import { provideRedux } from "angular-redux";
+import { store } from './store'
 // highlight-end
 
-// As of React 18
-const root = ReactDOM.createRoot(document.getElementById('root'))
-
-root.render(
-  // highlight-next-line
-  <Provider store={store}>
-    <App />
-  </Provider>,
-)
+bootstrapApplication(AppComponent, {
+  providers: [
+    // highlight-next-line
+    provideRedux({ store })
+  ]
+});
 ```
 
 ### Create a Redux State Slice
@@ -141,39 +135,34 @@ export default configureStore({
 })
 ```
 
-### Use Redux State and Actions in React Components
+### Use Redux State and Actions in Angular Components
 
-Now we can use the React Redux hooks to let React components interact with the Redux store. We can read data from the store with `useSelector`, and dispatch actions using `useDispatch`. Create a `src/features/counter/Counter.js` file with a `<Counter>` component inside, then import that component into `App.js` and render it inside of `<App>`.
+Now we can use the Angular Redux inject functions to let Angular components interact with the Redux store. We can read data from the store with `useSelector`, and dispatch actions using `useDispatch`. Create a `src/features/counter/counter.component.ts` file with a `<app-counter>` component inside, then import that component into `app.component.ts` and render it inside of `<app-root>`.
 
-```jsx title="features/counter/Counter.js"
-import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { decrement, increment } from './counterSlice'
-import styles from './Counter.module.css'
+```typescript title="features/counter/counter.component.ts"
+import { Component } from '@angular/core'
+import { injectSelector, injectDispatch } from "@reduxjs/angular-redux";
+import { decrement, increment } from './store/counter-slice'
+import { RootState } from './store'
 
-export function Counter() {
-  const count = useSelector((state) => state.counter.value)
-  const dispatch = useDispatch()
-
-  return (
-    <div>
-      <div>
-        <button
-          aria-label="Increment value"
-          onClick={() => dispatch(increment())}
-        >
-          Increment
-        </button>
-        <span>{count}</span>
-        <button
-          aria-label="Decrement value"
-          onClick={() => dispatch(decrement())}
-        >
-          Decrement
-        </button>
-      </div>
-    </div>
-  )
+@Component({
+  selector: 'app-counter',
+  standalone: true,
+  template: `
+      <button (click)="dispatch(increment())">
+        Increment
+      </button>
+      <span>{{ count() }}</span>
+      <button (click)="dispatch(decrement())">
+        Decrement
+      </button>
+  `
+})
+export class CounterComponent {
+  count = injectSelector((state: RootState) => state.counter.value)
+  dispatch = injectDispatch()
+  increment = increment
+  decrement = decrement
 }
 ```
 
@@ -181,27 +170,27 @@ Now, any time you click the "Increment" and "Decrement buttons:
 
 - The corresponding Redux action will be dispatched to the store
 - The counter slice reducer will see the actions and update its state
-- The `<Counter>` component will see the new state value from the store and re-render itself with the new data
+- The `<app-counter>` component will see the new state value from the store and re-render itself with the new data
 
 ## What You've Learned
 
-That was a brief overview of how to set up and use Redux Toolkit with React. Recapping the details:
+That was a brief overview of how to set up and use Redux Toolkit with Angular. Recapping the details:
 
 :::tip Summary
 
 - **Create a Redux store with `configureStore`**
   - `configureStore` accepts a `reducer` function as a named argument
   - `configureStore` automatically sets up the store with good default settings
-- **Provide the Redux store to the React application components**
-  - Put a React Redux `<Provider>` component around your `<App />`
+- **Provide the Redux store to the Angular application components**
+  - Put a Angular Redux `provideRedux` provider factory in your `bootstrapApplication`'s `providers` array
   - Pass the Redux store as `<Provider store={store}>`
 - **Create a Redux "slice" reducer with `createSlice`**
   - Call `createSlice` with a string name, an initial state, and named reducer functions
   - Reducer functions may "mutate" the state using Immer
   - Export the generated slice reducer and action creators
-- **Use the React Redux `useSelector/useDispatch` hooks in React components**
-  - Read data from the store with the `useSelector` hook
-  - Get the `dispatch` function with the `useDispatch` hook, and dispatch actions as needed
+- **Use the Angular Redux `injectSelector/injectDispatch` injections in Angular components**
+  - Read data from the store with the `injectSelector` injection
+  - Get the `dispatch` function with the `injectDispatch` injection, and dispatch actions as needed
 
 :::
 
@@ -219,4 +208,4 @@ Here's the complete Counter application as a running CodeSandbox:
 
 ## What's Next?
 
-We recommend going through [**the "Redux Essentials" and "Redux Fundamentals" tutorials in the Redux core docs**](https://redux.js.org/tutorials/index), which will give you a complete understanding of how Redux works, what Redux Toolkit and React Redux do, and how to use it correctly.
+We recommend going through [**the "Redux Essentials" and "Redux Fundamentals" tutorials in the Redux core docs**](https://redux.js.org/tutorials/index), which will give you a complete understanding of how Redux works, what Redux Toolkit and Angular Redux do, and how to use it correctly.
