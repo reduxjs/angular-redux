@@ -1,6 +1,6 @@
 {
   "name": "@reduxjs/angular-redux",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "keywords": [
     "angular",
     "redux"
