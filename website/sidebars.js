@@ -16,15 +16,6 @@ module.exports = {
         'tutorials/quick-start',
         'tutorials/typescript-quick-start'
       ],
-    },
-    {
-      type: 'category',
-      label: 'Using React Redux',
-      collapsed: false,
-      items: [
-        'using-angular-redux/usage-with-typescript',
-        'using-angular-redux/accessing-store',
-      ],
     }
   ],
 }

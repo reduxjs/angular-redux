@@ -20,7 +20,7 @@ const siteConfig = {
           showLastUpdateTime: true,
           editUrl: 'https://github.com/reduxjs/angular-redux/edit/main/website',
           include: [
-            '{introduction,using-angular-redux,tutorials}/*.{md,mdx}'
+            '{introduction,tutorials}/*.{md,mdx}'
           ], // no other way to exclude node_modules
         },
         theme: {
@@ -84,12 +84,6 @@ const siteConfig = {
           position: 'right',
         },
         {
-          to: 'using-angular-redux/accessing-store',
-          label: 'Using Angular Redux',
-          position: 'right',
-        },
-        { to: 'api/hooks', label: 'API', position: 'right' },
-        {
           href: 'https://www.github.com/reduxjs/angular-redux',
           label: 'GitHub',
           position: 'right',
@@ -117,14 +111,6 @@ const siteConfig = {
             {
               label: 'Introduction',
               to: 'introduction/getting-started',
-            },
-            {
-              label: 'Using Angular Redux',
-              to: 'using-angular-redux/accessing-store',
-            },
-            {
-              label: 'API Reference',
-              to: 'api/hooks',
             },
             {
               label: 'Guides',

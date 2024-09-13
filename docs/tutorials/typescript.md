@@ -169,7 +169,3 @@ export class CounterComponent {
   decrement = decrement
 }
 ```
-
-## What's Next?
-
-See [the "Usage with TypeScript" page](../using-angular-redux/usage-with-typescript.md) for extended details on how to use Redux Toolkit's APIs with TypeScript.
