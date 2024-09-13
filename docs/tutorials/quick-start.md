@@ -45,9 +45,9 @@ npm install @reduxjs/toolkit angular-redux
 
 ### Create a Redux Store
 
-Create a file named `src/app/store.js`. Import the `configureStore` API from Redux Toolkit. We'll start by creating an empty Redux store, and exporting it:
+Create a file named `src/app/store.ts`. Import the `configureStore` API from Redux Toolkit. We'll start by creating an empty Redux store, and exporting it:
 
-```typescript title="app/store.js"
+```typescript title="app/store.ts"
 import { configureStore } from '@reduxjs/toolkit'
 
 export default configureStore({
@@ -80,13 +80,13 @@ bootstrapApplication(AppComponent, {
 
 ### Create a Redux State Slice
 
-Add a new file named `src/features/counter/counterSlice.js`. In that file, import the `createSlice` API from Redux Toolkit.
+Add a new file named `src/features/counter/counterSlice.ts`. In that file, import the `createSlice` API from Redux Toolkit.
 
 Creating a slice requires a string name to identify the slice, an initial state value, and one or more reducer functions to define how the state can be updated. Once a slice is created, we can export the generated Redux action creators and the reducer function for the whole slice.
 
 Redux requires that [we write all state updates immutably, by making copies of data and updating the copies](https://redux.js.org/tutorials/fundamentals/part-2-concepts-data-flow#immutability). However, Redux Toolkit's `createSlice` and `createReducer` APIs use [Immer](https://immerjs.github.io/immer/) inside to allow us to [write "mutating" update logic that becomes correct immutable updates](https://redux.js.org/tutorials/fundamentals/part-8-modern-redux#immutable-updates-with-immer).
 
-```js title="features/counter/counterSlice.js"
+```js title="features/counter/counterSlice.ts"
 import { createSlice } from '@reduxjs/toolkit'
 
 export const counterSlice = createSlice({
@@ -122,7 +122,7 @@ export default counterSlice.reducer
 
 Next, we need to import the reducer function from the counter slice and add it to our store. By defining a field inside the `reducer` parameter, we tell the store to use this slice reducer function to handle all updates to that state.
 
-```js title="app/store.js"
+```js title="app/store.ts"
 import { configureStore } from '@reduxjs/toolkit'
 // highlight-next-line
 import counterReducer from '../features/counter/counterSlice'
