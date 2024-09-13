@@ -4,9 +4,11 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:docs": "yarn workspace website run start",
     "build": "ng build angular-redux && tsc -p projects/angular-redux/tsconfig.schematics.json && yarn build:copy",
     "build:copy": "cd ./projects/angular-redux/schematics && copyfiles \"**/*.json\" ../../../dist/angular-redux/schematics && copyfiles \"**/*.template\" ../../../dist/angular-redux/schematics",
     "build:ng": "ng build",
+    "build:docs": "yarn workspace website run build",
     "watch": "ng build --watch --configuration development",
     "test": "yarn test:ng && yarn test:schematics",
     "test:ng": "ng test",
@@ -14,7 +16,8 @@
   },
   "workspaces": {
     "packages": [
-      "projects/*"
+      "projects/*",
+      "website"
     ]
   },
   "private": true,
