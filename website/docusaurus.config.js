@@ -112,10 +112,6 @@ const siteConfig = {
               label: 'Introduction',
               to: 'introduction/getting-started',
             },
-            {
-              label: 'Guides',
-              to: 'troubleshooting',
-            },
           ],
         },
         {
