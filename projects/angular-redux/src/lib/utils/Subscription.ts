@@ -1,5 +1,3 @@
-import { defaultNoopBatch as batch } from './batch'
-
 // encapsulates the subscription logic for connecting a component to the redux store, as
 // well as nesting subscriptions of descendant components, so that we can ensure the
 // ancestor components re-render before descendants
@@ -23,13 +21,11 @@ function createListenerCollection() {
     },
 
     notify() {
-      batch(() => {
         let listener = first
         while (listener) {
           listener.callback()
           listener = listener.next
         }
-      })
     },
 
     get() {
