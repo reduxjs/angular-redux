@@ -29,7 +29,7 @@ interface ResolvedAppConfig {
 export function callsProvidersFunction(
   tree: Tree,
   filePath: string,
-  functionName: string
+  functionName: string,
 ): boolean {
   const sourceFile = createSourceFile(tree, filePath);
   const bootstrapCall = findBootstrapApplicationCall(sourceFile);
@@ -44,7 +44,7 @@ export function callsProvidersFunction(
     (el) =>
       ts.isCallExpression(el) &&
       ts.isIdentifier(el.expression) &&
-      el.expression.text === functionName
+      el.expression.text === functionName,
   );
 }
 
@@ -64,7 +64,7 @@ export function addFunctionalProvidersToStandaloneBootstrap(
   filePath: string,
   functionName: string,
   importPath: string,
-  args: ts.Expression[] = []
+  args: ts.Expression[] = [],
 ): string {
   const sourceFile = createSourceFile(tree, filePath);
   const bootstrapCall = findBootstrapApplicationCall(sourceFile);
@@ -78,14 +78,14 @@ export function addFunctionalProvidersToStandaloneBootstrap(
 
   if (!bootstrapCall) {
     throw new SchematicsException(
-      `Could not find bootstrapApplication call in ${filePath}`
+      `Could not find bootstrapApplication call in ${filePath}`,
     );
   }
 
   const providersCall = ts.factory.createCallExpression(
     ts.factory.createIdentifier(functionName),
     undefined,
-    args
+    args,
   );
 
   // If there's only one argument, we have to create a new object literal.
@@ -113,7 +113,7 @@ export function addFunctionalProvidersToStandaloneBootstrap(
 
   if (!appConfig) {
     throw new SchematicsException(
-      `Could not statically analyze config in bootstrapApplication call in ${filePath}`
+      `Could not statically analyze config in bootstrapApplication call in ${filePath}`,
     );
   }
 
@@ -142,12 +142,12 @@ export function addFunctionalProvidersToStandaloneBootstrap(
  * `@schematics/angular/utility` instead.
  */
 export function findBootstrapApplicationCall(
-  sourceFile: ts.SourceFile
+  sourceFile: ts.SourceFile,
 ): ts.CallExpression | null {
   const localName = findImportLocalName(
     sourceFile,
     'bootstrapApplication',
-    '@angular/platform-browser'
+    '@angular/platform-browser',
   );
 
   if (!localName) {
@@ -175,7 +175,7 @@ export function findBootstrapApplicationCall(
 
 /** Finds the `providers` array literal within an application config. */
 function findProvidersLiteral(
-  config: ts.ObjectLiteralExpression
+  config: ts.ObjectLiteralExpression,
 ): ts.ArrayLiteralExpression | null {
   for (const prop of config.properties) {
     if (
@@ -200,7 +200,7 @@ function findProvidersLiteral(
 function findAppConfig(
   bootstrapCall: ts.CallExpression,
   tree: Tree,
-  filePath: string
+  filePath: string,
 ): ResolvedAppConfig | null {
   if (bootstrapCall.arguments.length > 1) {
     const config = bootstrapCall.arguments[1];
@@ -226,7 +226,7 @@ function findAppConfig(
 function resolveAppConfigFromIdentifier(
   identifier: ts.Identifier,
   tree: Tree,
-  bootstapFilePath: string
+  bootstapFilePath: string,
 ): ResolvedAppConfig | null {
   const sourceFile = identifier.getSourceFile();
 
@@ -254,12 +254,12 @@ function resolveAppConfigFromIdentifier(
       // operate on individual files, not the entire program.
       const filePath = join(
         dirname(bootstapFilePath),
-        node.moduleSpecifier.text + '.ts'
+        node.moduleSpecifier.text + '.ts',
       );
       const importedSourceFile = createSourceFile(tree, filePath);
       const resolvedVariable = findAppConfigFromVariableName(
         importedSourceFile,
-        (specifier.propertyName || specifier.name).text
+        (specifier.propertyName || specifier.name).text,
       );
 
       if (resolvedVariable) {
@@ -270,7 +270,7 @@ function resolveAppConfigFromIdentifier(
 
   const variableInSameFile = findAppConfigFromVariableName(
     sourceFile,
-    identifier.text
+    identifier.text,
   );
 
   return variableInSameFile
@@ -285,7 +285,7 @@ function resolveAppConfigFromIdentifier(
  */
 function findAppConfigFromVariableName(
   sourceFile: ts.SourceFile,
-  variableName: string
+  variableName: string,
 ): ts.ObjectLiteralExpression | null {
   for (const node of sourceFile.statements) {
     if (ts.isVariableStatement(node)) {
@@ -314,7 +314,7 @@ function findAppConfigFromVariableName(
 function findImportLocalName(
   sourceFile: ts.SourceFile,
   name: string,
-  moduleName: string
+  moduleName: string,
 ): string | null {
   for (const node of sourceFile.statements) {
     // Only look for top-level imports.
@@ -353,7 +353,7 @@ function createSourceFile(tree: Tree, filePath: string): ts.SourceFile {
     filePath,
     tree.readText(filePath),
     ts.ScriptTarget.Latest,
-    true
+    true,
   );
 }
 
@@ -366,7 +366,7 @@ function createSourceFile(tree: Tree, filePath: string): ts.SourceFile {
 function addNewAppConfigToCall(
   call: ts.CallExpression,
   expression: ts.Expression,
-  recorder: UpdateRecorder
+  recorder: UpdateRecorder,
 ): void {
   const newCall = ts.factory.updateCallExpression(
     call,
@@ -378,12 +378,12 @@ function addNewAppConfigToCall(
         [
           ts.factory.createPropertyAssignment(
             'providers',
-            ts.factory.createArrayLiteralExpression([expression])
+            ts.factory.createArrayLiteralExpression([expression]),
           ),
         ],
-        true
+        true,
       ),
-    ]
+    ],
   );
 
   recorder.remove(call.getStart(), call.getWidth());
@@ -391,7 +391,7 @@ function addNewAppConfigToCall(
     call.getStart(),
     ts
       .createPrinter()
-      .printNode(ts.EmitHint.Unspecified, newCall, call.getSourceFile())
+      .printNode(ts.EmitHint.Unspecified, newCall, call.getSourceFile()),
   );
 }
 
@@ -404,7 +404,7 @@ function addNewAppConfigToCall(
 function addElementToArray(
   node: ts.ArrayLiteralExpression,
   element: ts.Expression,
-  recorder: UpdateRecorder
+  recorder: UpdateRecorder,
 ): void {
   const newLiteral = ts.factory.updateArrayLiteralExpression(node, [
     ...node.elements,
@@ -415,7 +415,7 @@ function addElementToArray(
     node.getStart(),
     ts
       .createPrinter()
-      .printNode(ts.EmitHint.Unspecified, newLiteral, node.getSourceFile())
+      .printNode(ts.EmitHint.Unspecified, newLiteral, node.getSourceFile()),
   );
 }
 
@@ -428,13 +428,13 @@ function addElementToArray(
 function addProvidersToObjectLiteral(
   node: ts.ObjectLiteralExpression,
   expression: ts.Expression,
-  recorder: UpdateRecorder
+  recorder: UpdateRecorder,
 ) {
   const newOptionsLiteral = ts.factory.updateObjectLiteralExpression(node, [
     ...node.properties,
     ts.factory.createPropertyAssignment(
       'providers',
-      ts.factory.createArrayLiteralExpression([expression])
+      ts.factory.createArrayLiteralExpression([expression]),
     ),
   ]);
   recorder.remove(node.getStart(), node.getWidth());
@@ -445,8 +445,8 @@ function addProvidersToObjectLiteral(
       .printNode(
         ts.EmitHint.Unspecified,
         newOptionsLiteral,
-        node.getSourceFile()
-      )
+        node.getSourceFile(),
+      ),
   );
 }
 
@@ -459,7 +459,7 @@ function isMergeAppConfigCall(node: ts.Node): node is ts.CallExpression {
   const localName = findImportLocalName(
     node.getSourceFile(),
     'mergeApplicationConfig',
-    '@angular/core'
+    '@angular/core',
   );
 
   return (

@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react'
-import classnames from 'classnames'
-import Layout from '@theme/Layout'
-import Link from '@docusaurus/Link'
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
-import useBaseUrl from '@docusaurus/useBaseUrl'
-import styles from './styles.module.css'
+import React, { useEffect } from "react";
+import classnames from "classnames";
+import Layout from "@theme/Layout";
+import Link from "@docusaurus/Link";
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
+import useBaseUrl from "@docusaurus/useBaseUrl";
+import styles from "./styles.module.css";
 
 const features = [
   {
     content: (
       <p>
-        Angular Redux is maintained by the Redux team, and{' '}
+        Angular Redux is maintained by the Redux team, and{" "}
         <strong>
           kept up-to-date with the latest APIs from Redux and Angular
         </strong>
@@ -18,8 +18,8 @@ const features = [
       </p>
     ),
     image: <img src="img/noun_Certificate_1945625.svg" />,
-    imageAlign: 'top',
-    title: 'Official',
+    imageAlign: "top",
+    title: "Official",
   },
   {
     content: (
@@ -30,40 +30,40 @@ const features = [
       </p>
     ),
     image: <img src="img/noun_Check_1870817.svg" />,
-    imageAlign: 'top',
-    title: 'Predictable',
+    imageAlign: "top",
+    title: "Predictable",
   },
   {
     content: (
       <p>
-        Provides APIs that{' '}
+        Provides APIs that{" "}
         <strong>enable your components to interact with the Redux store</strong>
         , so you don't have to write that logic yourself.
       </p>
     ),
     image: <img src="img/noun_Box_1664404.svg" />,
-    imageAlign: 'top',
-    title: 'Encapsulated',
+    imageAlign: "top",
+    title: "Encapsulated",
   },
   {
     content: (
       <p>
-        Automatically implements{' '}
+        Automatically implements{" "}
         <strong>complex performance optimizations</strong>, so that your own
         component only re-renders when the data it needs has actually changed.
       </p>
     ),
     image: <img src="img/noun_Rocket_1245262.svg" />,
-    imageAlign: 'top',
-    title: 'Optimized',
+    imageAlign: "top",
+    title: "Optimized",
   },
-]
+];
 
 const otherLibraries = [
   {
-    content: 'A predictable state container for JavaScript applications',
-    title: 'Redux',
-    link: 'https://redux.js.org',
+    content: "A predictable state container for JavaScript applications",
+    title: "Redux",
+    link: "https://redux.js.org",
     image: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -78,9 +78,9 @@ const otherLibraries = [
   },
   {
     content:
-      'The official, opinionated, batteries-included toolset for efficient Redux development',
-    title: 'Redux Toolkit',
-    link: 'https://redux-toolkit.js.org',
+      "The official, opinionated, batteries-included toolset for efficient Redux development",
+    title: "Redux Toolkit",
+    link: "https://redux-toolkit.js.org",
     image: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -93,21 +93,21 @@ const otherLibraries = [
       </svg>
     ),
   },
-]
+];
 
 function Home() {
-  const context = useDocusaurusContext()
-  const { siteConfig = {} } = context
+  const context = useDocusaurusContext();
+  const { siteConfig = {} } = context;
   useEffect(() => {
-    const script = document.createElement('script')
-    script.src = 'https://buttons.github.io/buttons.js'
-    script.async = true
-    document.body.appendChild(script)
-  }, [])
+    const script = document.createElement("script");
+    script.src = "https://buttons.github.io/buttons.js";
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
 
   return (
     <Layout title={siteConfig.title} description={siteConfig.tagline}>
-      <header className={classnames('hero hero--primary', styles.heroBanner)}>
+      <header className={classnames("hero hero--primary", styles.heroBanner)}>
         <div className="container">
           <div className={styles.title}>
             <img
@@ -124,10 +124,10 @@ function Home() {
           <div className={styles.buttons}>
             <Link
               className={classnames(
-                'button button--secondary button--lg',
+                "button button--secondary button--lg",
                 styles.getStarted,
               )}
-              to={useBaseUrl('introduction/getting-started')}
+              to={useBaseUrl("introduction/getting-started")}
             >
               Get Started
             </Link>
@@ -137,10 +137,10 @@ function Home() {
       <main>
         {features && features.length && (
           <section className={styles.features}>
-            <div className={classnames('container', styles.featureBlock)}>
+            <div className={classnames("container", styles.featureBlock)}>
               <div className="row">
                 {features.map(({ image, title, content }, idx) => (
-                  <div key={idx} className={classnames('col', styles.feature)}>
+                  <div key={idx} className={classnames("col", styles.feature)}>
                     {image && (
                       <div className={`text--center ${styles.blockImage}`}>
                         {image}
@@ -170,7 +170,7 @@ function Home() {
                 {otherLibraries.map(({ image, title, content, link }, idx) => (
                   <div
                     key={idx}
-                    className={classnames('col col--6', styles.feature)}
+                    className={classnames("col col--6", styles.feature)}
                   >
                     <h2 className="text--center">
                       <a href={link} className={styles.featureAnchor}>
@@ -187,7 +187,7 @@ function Home() {
         )}
       </main>
     </Layout>
-  )
+  );
 }
 
-export default Home
+export default Home;

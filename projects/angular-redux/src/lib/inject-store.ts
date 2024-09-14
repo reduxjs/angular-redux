@@ -1,6 +1,6 @@
-import { assertInInjectionContext, inject } from '@angular/core'
-import { ReduxProvider } from './provider'
-import type { Store, Action } from 'redux'
+import { assertInInjectionContext, inject } from '@angular/core';
+import { ReduxProvider } from './provider';
+import type { Store, Action } from 'redux';
 
 /**
  * Represents a type that extracts the action type from a given Redux store.
@@ -10,7 +10,7 @@ import type { Store, Action } from 'redux'
  * @internal
  */
 export type ExtractStoreActionType<StoreType extends Store> =
-  StoreType extends Store<any, infer ActionType> ? ActionType : never
+  StoreType extends Store<any, infer ActionType> ? ActionType : never;
 
 /**
  * Represents a custom injection that provides access to the Redux store.
@@ -25,7 +25,7 @@ export interface InjectStore<StoreType extends Store> {
    *
    * @returns The Redux store instance.
    */
-  (): StoreType
+  (): StoreType;
 
   /**
    * Returns the Redux store instance with specific state and action types.
@@ -35,12 +35,12 @@ export interface InjectStore<StoreType extends Store> {
    * @template StateType - The specific type of the state used in the store.
    * @template ActionType - The specific type of the actions used in the store.
    */
-    <
-      StateType extends ReturnType<StoreType['getState']> = ReturnType<
-        StoreType['getState']
-      >,
-      ActionType extends Action = ExtractStoreActionType<Store>,
-    >(): Store<StateType, ActionType>
+  <
+    StateType extends ReturnType<StoreType['getState']> = ReturnType<
+      StoreType['getState']
+    >,
+    ActionType extends Action = ExtractStoreActionType<Store>,
+  >(): Store<StateType, ActionType>;
 
   /**
    * Creates a "pre-typed" version of {@linkcode injectStore injectStore}
@@ -60,7 +60,7 @@ export interface InjectStore<StoreType extends Store> {
    */
   withTypes: <
     OverrideStoreType extends StoreType,
-  >() => InjectStore<OverrideStoreType>
+  >() => InjectStore<OverrideStoreType>;
 }
 
 /**
@@ -73,17 +73,17 @@ export function createStoreInjection<
   ActionType extends Action = Action,
 >() {
   const injectStore = () => {
-    assertInInjectionContext(injectStore)
-    const context = inject(ReduxProvider)
-    const { store } = context
-    return store
-  }
+    assertInInjectionContext(injectStore);
+    const context = inject(ReduxProvider);
+    const { store } = context;
+    return store;
+  };
 
   Object.assign(injectStore, {
     withTypes: () => injectStore,
-  })
+  });
 
-  return injectStore as InjectStore<Store<StateType, ActionType>>
+  return injectStore as InjectStore<Store<StateType, ActionType>>;
 }
 
 /**
@@ -103,4 +103,4 @@ export function createStoreInjection<
  *   store = injectStore()
  * }
  */
-export const injectStore = /* #__PURE__*/ createStoreInjection()
+export const injectStore = /* #__PURE__*/ createStoreInjection();

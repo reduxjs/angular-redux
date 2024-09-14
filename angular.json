@@ -27,14 +27,9 @@
         "test": {
           "builder": "@angular-devkit/build-angular:jest",
           "options": {
-            "exclude": [
-              "**/schematics/ng-add/*.spec.ts"
-            ],
+            "exclude": ["**/schematics/ng-add/*.spec.ts"],
             "tsConfig": "projects/angular-redux/tsconfig.spec.json",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
+            "polyfills": ["zone.js", "zone.js/testing"]
           }
         }
       }
@@ -79,9 +74,7 @@
             "outputPath": "dist/angular-redux-demo",
             "index": "projects/angular-redux-demo/src/index.html",
             "browser": "projects/angular-redux-demo/src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "projects/angular-redux-demo/tsconfig.app.json",
             "assets": [
               {
@@ -89,9 +82,7 @@
                 "input": "projects/angular-redux-demo/public"
               }
             ],
-            "styles": [
-              "projects/angular-redux-demo/src/styles.css"
-            ],
+            "styles": ["projects/angular-redux-demo/src/styles.css"],
             "scripts": []
           },
           "configurations": {

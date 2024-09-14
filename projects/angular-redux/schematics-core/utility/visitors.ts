@@ -7,8 +7,8 @@ export function visitTSSourceFiles<Result = void>(
   visitor: (
     sourceFile: ts.SourceFile,
     tree: Tree,
-    result?: Result
-  ) => Result | undefined
+    result?: Result,
+  ) => Result | undefined,
 ): Result | undefined {
   let result: Result | undefined = undefined;
   for (const sourceFile of visit(tree.root)) {
@@ -27,8 +27,8 @@ export function visitTemplates(
       inline: boolean;
       start: number;
     },
-    tree: Tree
-  ) => void
+    tree: Tree,
+  ) => void,
 ): void {
   visitTSSourceFiles(tree, (source) => {
     visitComponents(source, (_, decoratorExpressionNode) => {
@@ -48,7 +48,7 @@ export function visitTemplates(
                 inline: true,
                 start: templateStartIdx,
               },
-              tree
+              tree,
             );
             return;
           } else if (
@@ -58,7 +58,7 @@ export function visitTemplates(
             const parts = normalize(source.fileName).split('/').slice(0, -1);
             const templatePath = resolve(
               normalize(parts.join('/')),
-              normalize(n.initializer.text)
+              normalize(n.initializer.text),
             );
             if (!tree.exists(templatePath)) {
               return;
@@ -76,7 +76,7 @@ export function visitTemplates(
                 inline: false,
                 start: 0,
               },
-              tree
+              tree,
             );
             return;
           }
@@ -92,8 +92,8 @@ export function visitNgModuleImports(
   sourceFile: ts.SourceFile,
   callback: (
     importNode: ts.PropertyAssignment,
-    elementExpressions: ts.NodeArray<ts.Expression>
-  ) => void
+    elementExpressions: ts.NodeArray<ts.Expression>,
+  ) => void,
 ) {
   visitNgModuleProperty(sourceFile, callback, 'imports');
 }
@@ -102,8 +102,8 @@ export function visitNgModuleExports(
   sourceFile: ts.SourceFile,
   callback: (
     exportNode: ts.PropertyAssignment,
-    elementExpressions: ts.NodeArray<ts.Expression>
-  ) => void
+    elementExpressions: ts.NodeArray<ts.Expression>,
+  ) => void,
 ) {
   visitNgModuleProperty(sourceFile, callback, 'exports');
 }
@@ -112,9 +112,9 @@ function visitNgModuleProperty(
   sourceFile: ts.SourceFile,
   callback: (
     nodes: ts.PropertyAssignment,
-    elementExpressions: ts.NodeArray<ts.Expression>
+    elementExpressions: ts.NodeArray<ts.Expression>,
   ) => void,
-  property: string
+  property: string,
 ) {
   visitNgModules(sourceFile, (_, decoratorExpressionNode) => {
     ts.forEachChild(decoratorExpressionNode, function findTemplates(n) {
@@ -136,8 +136,8 @@ export function visitComponents(
   sourceFile: ts.SourceFile,
   callback: (
     classDeclarationNode: ts.ClassDeclaration,
-    decoratorExpressionNode: ts.ObjectLiteralExpression
-  ) => void
+    decoratorExpressionNode: ts.ObjectLiteralExpression,
+  ) => void,
 ) {
   visitDecorator(sourceFile, 'Component', callback);
 }
@@ -146,8 +146,8 @@ export function visitNgModules(
   sourceFile: ts.SourceFile,
   callback: (
     classDeclarationNode: ts.ClassDeclaration,
-    decoratorExpressionNode: ts.ObjectLiteralExpression
-  ) => void
+    decoratorExpressionNode: ts.ObjectLiteralExpression,
+  ) => void,
 ) {
   visitDecorator(sourceFile, 'NgModule', callback);
 }
@@ -157,8 +157,8 @@ export function visitDecorator(
   decoratorName: string,
   callback: (
     classDeclarationNode: ts.ClassDeclaration,
-    decoratorExpressionNode: ts.ObjectLiteralExpression
-  ) => void
+    decoratorExpressionNode: ts.ObjectLiteralExpression,
+  ) => void,
 ) {
   ts.forEachChild(sourceFile, function findClassDeclaration(node) {
     if (!ts.isClassDeclaration(node)) {
@@ -208,7 +208,7 @@ function* visit(directory: DirEntry): IterableIterator<ts.SourceFile> {
           entry.path,
           content.toString().replace(/^\uFEFF/, ''),
           ts.ScriptTarget.Latest,
-          true
+          true,
         );
         yield source;
       }

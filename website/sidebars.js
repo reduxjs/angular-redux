@@ -1,21 +1,16 @@
 module.exports = {
   docs: [
     {
-      type: 'category',
-      label: 'Introduction',
+      type: "category",
+      label: "Introduction",
       collapsed: false,
-      items: [
-        'introduction/getting-started'
-      ],
+      items: ["introduction/getting-started"],
     },
     {
-      type: 'category',
-      label: 'Tutorials',
+      type: "category",
+      label: "Tutorials",
       collapsed: false,
-      items: [
-        'tutorials/quick-start',
-        'tutorials/typescript-quick-start'
-      ],
-    }
+      items: ["tutorials/quick-start", "tutorials/typescript-quick-start"],
+    },
   ],
-}
+};

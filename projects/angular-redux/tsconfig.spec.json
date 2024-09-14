@@ -5,16 +5,8 @@
   "compilerOptions": {
     "outDir": "../../out-tsc/spec",
     "emitDecoratorMetadata": true,
-    "types": [
-      "jest"
-    ]
+    "types": ["jest"]
   },
-  "include": [
-    "**/*.spec.ts",
-    "**/*.d.ts"
-  ],
-  "exclude": [
-    "./schematics/**/*.ts",
-    "./schematics-core/**/*.ts"
-  ]
+  "include": ["**/*.spec.ts", "**/*.d.ts"],
+  "exclude": ["./schematics/**/*.ts", "./schematics-core/**/*.ts"]
 }

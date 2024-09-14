@@ -28,7 +28,7 @@ import { Path } from '@angular-devkit/core';
 export function findNodes(
   node: ts.Node,
   kind: ts.SyntaxKind,
-  max = Infinity
+  max = Infinity,
 ): ts.Node[] {
   if (!node || max == 0) {
     return [];
@@ -106,7 +106,7 @@ export function insertAfterLastOccurrence(
   toInsert: string,
   file: string,
   fallbackPos: number,
-  syntaxKind?: ts.SyntaxKind
+  syntaxKind?: ts.SyntaxKind,
 ): Change {
   let lastItem = nodes.sort(nodesByPosition).pop();
   if (!lastItem) {
@@ -117,7 +117,7 @@ export function insertAfterLastOccurrence(
   }
   if (!lastItem && fallbackPos == undefined) {
     throw new Error(
-      `tried to insert ${toInsert} as first occurence with no fallback position`
+      `tried to insert ${toInsert} as first occurence with no fallback position`,
     );
   }
   const lastItemPosition: number = lastItem ? lastItem.end : fallbackPos;
@@ -127,7 +127,7 @@ export function insertAfterLastOccurrence(
 
 export function getContentOfKeyLiteral(
   _source: ts.SourceFile,
-  node: ts.Node
+  node: ts.Node,
 ): string | null {
   if (node.kind == ts.SyntaxKind.Identifier) {
     return (node as ts.Identifier).text;
@@ -140,7 +140,7 @@ export function getContentOfKeyLiteral(
 
 function _angularImportsFromNode(
   node: ts.ImportDeclaration,
-  _sourceFile: ts.SourceFile
+  _sourceFile: ts.SourceFile,
 ): { [name: string]: string } {
   const ms = node.moduleSpecifier;
   let modulePath: string;
@@ -173,7 +173,7 @@ function _angularImportsFromNode(
 
         return namedImports.elements
           .map((is: ts.ImportSpecifier) =>
-            is.propertyName ? is.propertyName.text : is.name.text
+            is.propertyName ? is.propertyName.text : is.name.text,
           )
           .reduce((acc: { [name: string]: string }, curr: string) => {
             acc[curr] = modulePath;
@@ -193,19 +193,19 @@ function _angularImportsFromNode(
 export function getDecoratorMetadata(
   source: ts.SourceFile,
   identifier: string,
-  module: string
+  module: string,
 ): ts.Node[] {
   const angularImports: { [name: string]: string } = findNodes(
     source,
-    ts.SyntaxKind.ImportDeclaration
+    ts.SyntaxKind.ImportDeclaration,
   )
     .map((node) =>
-      _angularImportsFromNode(node as ts.ImportDeclaration, source)
+      _angularImportsFromNode(node as ts.ImportDeclaration, source),
     )
     .reduce(
       (
         acc: { [name: string]: string },
-        current: { [name: string]: string }
+        current: { [name: string]: string },
       ) => {
         for (const key of Object.keys(current)) {
           acc[key] = current[key];
@@ -213,7 +213,7 @@ export function getDecoratorMetadata(
 
         return acc;
       },
-      {}
+      {},
     );
 
   return getSourceNodes(source)
@@ -253,7 +253,7 @@ export function getDecoratorMetadata(
     .filter(
       (expr) =>
         expr.arguments[0] &&
-        expr.arguments[0].kind == ts.SyntaxKind.ObjectLiteralExpression
+        expr.arguments[0].kind == ts.SyntaxKind.ObjectLiteralExpression,
     )
     .map((expr) => expr.arguments[0] as ts.ObjectLiteralExpression);
 }
@@ -263,7 +263,7 @@ function _addSymbolToNgModuleMetadata(
   ngModulePath: string,
   metadataField: string,
   symbolName: string,
-  importPath: string
+  importPath: string,
 ): Change[] {
   const nodes = getDecoratorMetadata(source, 'NgModule', '@angular/core');
   let node: any = nodes[0]; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -319,13 +319,13 @@ function _addSymbolToNgModuleMetadata(
     const newMetadataProperty = new InsertChange(
       ngModulePath,
       position,
-      toInsert
+      toInsert,
     );
     const newMetadataImport = insertImport(
       source,
       ngModulePath,
       symbolName.replace(/\..*$/, ''),
-      importPath
+      importPath,
     );
 
     return [newMetadataProperty, newMetadataImport];
@@ -348,7 +348,7 @@ function _addSymbolToNgModuleMetadata(
 
   if (!node) {
     console.log(
-      'No app module found. Please add your new class to your component.'
+      'No app module found. Please add your new class to your component.',
     );
 
     return [];
@@ -368,7 +368,7 @@ function _addSymbolToNgModuleMetadata(
         (node.getText().includes('EffectsModule.forRoot') &&
           symbolName.includes('EffectsModule.forRoot')) ||
         (node.getText().includes('EffectsModule.forFeature') &&
-          symbolName.includes('EffectsModule.forFeature'))
+          symbolName.includes('EffectsModule.forFeature')),
     );
 
     if (effectsModule && symbolName.includes('EffectsModule')) {
@@ -449,7 +449,7 @@ function _addSymbolToNgModuleMetadata(
     source,
     ngModulePath,
     symbolName.replace(/\..*$/, ''),
-    importPath
+    importPath,
   );
 
   return [insert, importInsert];
@@ -460,7 +460,7 @@ function _addSymbolToComponentMetadata(
   componentPath: string,
   metadataField: string,
   symbolName: string,
-  importPath: string
+  importPath: string,
 ): Change[] {
   const nodes = getDecoratorMetadata(source, 'Component', '@angular/core');
   let node: any = nodes[0]; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -516,13 +516,13 @@ function _addSymbolToComponentMetadata(
     const newMetadataProperty = new InsertChange(
       componentPath,
       position,
-      toInsert
+      toInsert,
     );
     const newMetadataImport = insertImport(
       source,
       componentPath,
       symbolName.replace(/\..*$/, ''),
-      importPath
+      importPath,
     );
 
     return [newMetadataProperty, newMetadataImport];
@@ -545,7 +545,7 @@ function _addSymbolToComponentMetadata(
 
   if (!node) {
     console.log(
-      'No component found. Please add your new class to your component.'
+      'No component found. Please add your new class to your component.',
     );
 
     return [];
@@ -601,7 +601,7 @@ function _addSymbolToComponentMetadata(
     source,
     componentPath,
     symbolName.replace(/\..*$/, ''),
-    importPath
+    importPath,
   );
 
   return [insert, importInsert];
@@ -615,14 +615,14 @@ export function addDeclarationToModule(
   source: ts.SourceFile,
   modulePath: string,
   classifiedName: string,
-  importPath: string
+  importPath: string,
 ): Change[] {
   return _addSymbolToNgModuleMetadata(
     source,
     modulePath,
     'declarations',
     classifiedName,
-    importPath
+    importPath,
   );
 }
 
@@ -634,14 +634,14 @@ export function addImportToModule(
   source: ts.SourceFile,
   modulePath: string,
   classifiedName: string,
-  importPath: string
+  importPath: string,
 ): Change[] {
   return _addSymbolToNgModuleMetadata(
     source,
     modulePath,
     'imports',
     classifiedName,
-    importPath
+    importPath,
   );
 }
 
@@ -652,14 +652,14 @@ export function addProviderToModule(
   source: ts.SourceFile,
   modulePath: string,
   classifiedName: string,
-  importPath: string
+  importPath: string,
 ): Change[] {
   return _addSymbolToNgModuleMetadata(
     source,
     modulePath,
     'providers',
     classifiedName,
-    importPath
+    importPath,
   );
 }
 
@@ -670,14 +670,14 @@ export function addProviderToComponent(
   source: ts.SourceFile,
   componentPath: string,
   classifiedName: string,
-  importPath: string
+  importPath: string,
 ): Change[] {
   return _addSymbolToComponentMetadata(
     source,
     componentPath,
     'providers',
     classifiedName,
-    importPath
+    importPath,
   );
 }
 
@@ -688,14 +688,14 @@ export function addExportToModule(
   source: ts.SourceFile,
   modulePath: string,
   classifiedName: string,
-  importPath: string
+  importPath: string,
 ): Change[] {
   return _addSymbolToNgModuleMetadata(
     source,
     modulePath,
     'exports',
     classifiedName,
-    importPath
+    importPath,
   );
 }
 
@@ -706,14 +706,14 @@ export function addBootstrapToModule(
   source: ts.SourceFile,
   modulePath: string,
   classifiedName: string,
-  importPath: string
+  importPath: string,
 ): Change[] {
   return _addSymbolToNgModuleMetadata(
     source,
     modulePath,
     'bootstrap',
     classifiedName,
-    importPath
+    importPath,
   );
 }
 
@@ -732,7 +732,7 @@ export function insertImport(
   fileToEdit: string,
   symbolName: string,
   fileName: string,
-  isDefault = false
+  isDefault = false,
 ): Change {
   const rootNode = source;
   const allImports = findNodes(rootNode, ts.SyntaxKind.ImportDeclaration);
@@ -755,7 +755,7 @@ export function insertImport(
     relevantImports.forEach((n) => {
       Array.prototype.push.apply(
         imports,
-        findNodes(n, ts.SyntaxKind.Identifier)
+        findNodes(n, ts.SyntaxKind.Identifier),
       );
       if (findNodes(n, ts.SyntaxKind.AsteriskToken).length > 0) {
         importsAsterisk = true;
@@ -768,7 +768,7 @@ export function insertImport(
     }
 
     const importTextNodes = imports.filter(
-      (n) => (n as ts.Identifier).text === symbolName
+      (n) => (n as ts.Identifier).text === symbolName,
     );
 
     // insert import if it's not there
@@ -776,7 +776,7 @@ export function insertImport(
       const fallbackPos =
         findNodes(
           relevantImports[0],
-          ts.SyntaxKind.CloseBraceToken
+          ts.SyntaxKind.CloseBraceToken,
         )[0].getStart() ||
         findNodes(relevantImports[0], ts.SyntaxKind.FromKeyword)[0].getStart();
 
@@ -784,7 +784,7 @@ export function insertImport(
         imports,
         `, ${symbolName}`,
         fileToEdit,
-        fallbackPos
+        fallbackPos,
       );
     }
 
@@ -793,7 +793,7 @@ export function insertImport(
 
   // no such import declaration exists
   const useStrict = findNodes(rootNode, ts.SyntaxKind.StringLiteral).filter(
-    (n) => n.getText() === 'use strict'
+    (n) => n.getText() === 'use strict',
   );
   let fallbackPos = 0;
   if (useStrict.length > 0) {
@@ -813,7 +813,7 @@ export function insertImport(
     toInsert,
     fileToEdit,
     fallbackPos,
-    ts.SyntaxKind.StringLiteral
+    ts.SyntaxKind.StringLiteral,
   );
 }
 
@@ -822,14 +822,14 @@ export function replaceImport(
   path: Path,
   importFrom: string,
   importAsIs: string,
-  importToBe: string
+  importToBe: string,
 ): (ReplaceChange | RemoveChange)[] {
   const imports = sourceFile.statements
     .filter(ts.isImportDeclaration)
     .filter(
       ({ moduleSpecifier }) =>
         moduleSpecifier.getText(sourceFile) === `'${importFrom}'` ||
-        moduleSpecifier.getText(sourceFile) === `"${importFrom}"`
+        moduleSpecifier.getText(sourceFile) === `"${importFrom}"`,
     );
 
   if (imports.length === 0) {
@@ -874,7 +874,7 @@ export function replaceImport(
           sourceFile,
           specifier,
           importAsIs,
-          importToBe
+          importToBe,
         );
       }
 
@@ -885,7 +885,7 @@ export function replaceImport(
           sourceFile,
           specifier,
           specifier.getStart(sourceFile),
-          nextIdentifier.getStart(sourceFile)
+          nextIdentifier.getStart(sourceFile),
         );
       }
 
@@ -894,7 +894,7 @@ export function replaceImport(
         sourceFile,
         specifier,
         specifier.getStart(sourceFile),
-        specifier.getEnd()
+        specifier.getEnd(),
       );
     });
 
@@ -906,7 +906,7 @@ export function replaceImport(
 
 export function containsProperty(
   objectLiteral: ts.ObjectLiteralExpression,
-  propertyName: string
+  propertyName: string,
 ) {
   return (
     objectLiteral &&
@@ -914,7 +914,7 @@ export function containsProperty(
       (prop) =>
         ts.isPropertyAssignment(prop) &&
         ts.isIdentifier(prop.name) &&
-        prop.name.text === propertyName
+        prop.name.text === propertyName,
     )
   );
 }

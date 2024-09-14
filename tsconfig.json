@@ -4,9 +4,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
-      "angular-redux": [
-        "./dist/angular-redux"
-      ]
+      "angular-redux": ["./dist/angular-redux"]
     },
     "outDir": "./dist/out-tsc",
     "strict": true,
@@ -24,10 +22,7 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
-    "lib": [
-      "ES2022",
-      "dom"
-    ],
+    "lib": ["ES2022", "dom"],
     "types": ["jest"]
   },
   "angularCompilerOptions": {

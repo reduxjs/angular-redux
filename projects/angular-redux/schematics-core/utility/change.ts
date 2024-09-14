@@ -49,7 +49,11 @@ export class InsertChange implements Change {
   order: number;
   description: string;
 
-  constructor(public path: string, public pos: number, public toAdd: string) {
+  constructor(
+    public path: string,
+    public pos: number,
+    public toAdd: string,
+  ) {
     if (pos < 0) {
       throw new Error('Negative positions are invalid');
     }
@@ -77,7 +81,11 @@ export class RemoveChange implements Change {
   order: number;
   description: string;
 
-  constructor(public path: string, public pos: number, public end: number) {
+  constructor(
+    public path: string,
+    public pos: number,
+    public end: number,
+  ) {
     if (pos < 0 || end < 0) {
       throw new Error('Negative positions are invalid');
     }
@@ -107,7 +115,7 @@ export class ReplaceChange implements Change {
     public path: string,
     public pos: number,
     public oldText: string,
-    public newText: string
+    public newText: string,
   ) {
     if (pos < 0) {
       throw new Error('Negative positions are invalid');
@@ -124,7 +132,7 @@ export class ReplaceChange implements Change {
 
       if (text !== this.oldText) {
         return Promise.reject(
-          new Error(`Invalid replace: "${text}" != "${this.oldText}".`)
+          new Error(`Invalid replace: "${text}" != "${this.oldText}".`),
         );
       }
 
@@ -138,13 +146,13 @@ export function createReplaceChange(
   sourceFile: ts.SourceFile,
   node: ts.Node,
   oldText: string,
-  newText: string
+  newText: string,
 ): ReplaceChange {
   return new ReplaceChange(
     sourceFile.fileName,
     node.getStart(sourceFile),
     oldText,
-    newText
+    newText,
   );
 }
 
@@ -152,7 +160,7 @@ export function createRemoveChange(
   sourceFile: ts.SourceFile,
   node: ts.Node,
   from = node.getStart(sourceFile),
-  to = node.getEnd()
+  to = node.getEnd(),
 ): RemoveChange {
   return new RemoveChange(sourceFile.fileName, from, to);
 }
@@ -160,7 +168,7 @@ export function createRemoveChange(
 export function createChangeRecorder(
   tree: Tree,
   path: string,
-  changes: Change[]
+  changes: Change[],
 ): UpdateRecorder {
   const recorder = tree.beginUpdate(path);
   for (const change of changes) {

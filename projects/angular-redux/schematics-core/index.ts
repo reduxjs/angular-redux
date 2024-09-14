@@ -34,14 +34,11 @@ export {
   ReplaceChange,
   createReplaceChange,
   createChangeRecorder,
-  commitChanges
+  commitChanges,
 } from './utility/change';
-export type {
-    Host,
-    Change
-} from './utility/change';
+export type { Host, Change } from './utility/change';
 
-export {getWorkspace, getWorkspacePath} from './utility/config';
+export { getWorkspace, getWorkspacePath } from './utility/config';
 export type { AppConfig } from './utility/config';
 
 export { findComponentFromOptions } from './utility/find-component';
@@ -49,7 +46,7 @@ export { findComponentFromOptions } from './utility/find-component';
 export {
   findModule,
   findModuleFromOptions,
-  buildRelativePath
+  buildRelativePath,
 } from './utility/find-module';
 export type { ModuleOptions } from './utility/find-module';
 

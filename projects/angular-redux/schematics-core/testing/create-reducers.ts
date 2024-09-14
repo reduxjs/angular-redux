@@ -3,7 +3,7 @@ import { UnitTestTree } from '@angular-devkit/schematics/testing';
 export function createReducers(
   tree: UnitTestTree,
   path?: string,
-  project = 'bar'
+  project = 'bar',
 ) {
   tree.create(
     path || `/projects/${project}/src/app/reducers/index.ts`,
@@ -27,7 +27,7 @@ export function createReducers(
 
 
     export const metaReducers: MetaReducer<State>[] = isDevMode() ? [] : [];
-  `
+  `,
   );
 
   return tree;

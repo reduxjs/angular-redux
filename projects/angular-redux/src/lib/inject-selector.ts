@@ -1,12 +1,18 @@
-import { EqualityFn } from './types'
-import { assertInInjectionContext, effect, inject, Signal, signal } from '@angular/core'
-import { ReduxProvider } from './provider'
+import { EqualityFn } from './types';
+import {
+  assertInInjectionContext,
+  effect,
+  inject,
+  Signal,
+  signal,
+} from '@angular/core';
+import { ReduxProvider } from './provider';
 
 export interface InjectSelectorOptions<Selected = unknown> {
-  equalityFn?: EqualityFn<Selected>
+  equalityFn?: EqualityFn<Selected>;
 }
 
-const refEquality: EqualityFn<any> = (a, b) => a === b
+const refEquality: EqualityFn<any> = (a, b) => a === b;
 
 /**
  * Represents a custom injection that allows you to extract data from the
@@ -32,10 +38,12 @@ export interface InjectSelector<StateType = unknown> {
    * @template TState - The specific type of state this injection operates on.
    * @template Selected - The type of the value that the selector function will return.
    */
-    <TState extends StateType = StateType, Selected = unknown>(
+  <TState extends StateType = StateType, Selected = unknown>(
     selector: (state: TState) => Selected,
-    equalityFnOrOptions?: EqualityFn<Selected> | InjectSelectorOptions<Selected>,
-  ): Signal<Selected>
+    equalityFnOrOptions?:
+      | EqualityFn<Selected>
+      | InjectSelectorOptions<Selected>,
+  ): Signal<Selected>;
 
   /**
    * Creates a "pre-typed" version of {@linkcode injectSelector injectSelector}
@@ -55,7 +63,7 @@ export interface InjectSelector<StateType = unknown> {
    */
   withTypes: <
     OverrideStateType extends StateType,
-  >() => InjectSelector<OverrideStateType>
+  >() => InjectSelector<OverrideStateType>;
 }
 
 /**
@@ -64,50 +72,47 @@ export interface InjectSelector<StateType = unknown> {
  * @returns {Function} A `injectSelector` injection bound to the specified context.
  */
 export function createSelectorInjection(): InjectSelector {
-  const injectSelector =
-  <TState, Selected>(
+  const injectSelector = <TState, Selected>(
     selector: (state: TState) => Selected,
-    equalityFnOrOptions: EqualityFn<Selected> | InjectSelectorOptions<Selected> = {},
-  ): Signal<Selected> =>
-  {
-    assertInInjectionContext(injectSelector)
+    equalityFnOrOptions:
+      | EqualityFn<Selected>
+      | InjectSelectorOptions<Selected> = {},
+  ): Signal<Selected> => {
+    assertInInjectionContext(injectSelector);
     const reduxContext = inject(ReduxProvider);
 
     const { equalityFn = refEquality } =
       typeof equalityFnOrOptions === 'function'
         ? { equalityFn: equalityFnOrOptions }
-        : equalityFnOrOptions
+        : equalityFnOrOptions;
 
-    const {
-      store,
-      subscription
-    } = reduxContext
+    const { store, subscription } = reduxContext;
 
-    const selectedState = signal(selector(store.getState()))
+    const selectedState = signal(selector(store.getState()));
 
     effect((onCleanup) => {
       const unsubscribe = subscription.addNestedSub(() => {
         const data = selector(store.getState());
         if (equalityFn(selectedState(), data)) {
-          return
+          return;
         }
 
         selectedState.set(data);
-      })
+      });
 
       onCleanup(() => {
-        unsubscribe()
-      })
-    })
+        unsubscribe();
+      });
+    });
 
-    return selectedState
-  }
+    return selectedState;
+  };
 
   Object.assign(injectSelector, {
     withTypes: () => injectSelector,
-  })
+  });
 
-  return injectSelector as InjectSelector
+  return injectSelector as InjectSelector;
 }
 
 /**
@@ -135,4 +140,4 @@ export function createSelectorInjection(): InjectSelector {
  *   counter = injectSelector(state => state.counter)
  * }
  */
-export const injectSelector = /* #__PURE__*/ createSelectorInjection()
+export const injectSelector = /* #__PURE__*/ createSelectorInjection();

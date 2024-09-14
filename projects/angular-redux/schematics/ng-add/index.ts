@@ -1,5 +1,5 @@
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from 'fs';
+import * as path from 'path';
 import * as ts from 'typescript';
 import {
   Rule,
@@ -61,7 +61,7 @@ function addImportToNgModule(options: AngularReduxOptions): Rule {
       modulePath,
       sourceText,
       ts.ScriptTarget.Latest,
-      true
+      true,
     );
 
     const storeModuleSetup = `provideRedux({store: store})`;
@@ -72,11 +72,16 @@ function addImportToNgModule(options: AngularReduxOptions): Rule {
       source,
       modulePath,
       storeModuleSetup,
-      relativePath
+      relativePath,
     );
 
     let changes = [
-      insertImport(source, modulePath, 'provideRedux', '@reduxjs/angular-redux'),
+      insertImport(
+        source,
+        modulePath,
+        'provideRedux',
+        '@reduxjs/angular-redux',
+      ),
       insertImport(source, modulePath, 'store', relativePath),
       storeNgModuleImport,
     ];
@@ -94,11 +99,13 @@ function addImportToNgModule(options: AngularReduxOptions): Rule {
   };
 }
 
-const angularReduxPackageMeta = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../package.json'), "utf8")) as unknown as {
+const angularReduxPackageMeta = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, '../../package.json'), 'utf8'),
+) as unknown as {
   version: string;
   peerDependencies: {
     [key: string]: string;
-  }
+  };
 };
 
 function addReduxDepsToPackageJson() {
@@ -107,19 +114,19 @@ function addReduxDepsToPackageJson() {
       host,
       'dependencies',
       '@reduxjs/toolkit',
-      angularReduxPackageMeta.peerDependencies['@reduxjs/toolkit']
+      angularReduxPackageMeta.peerDependencies['@reduxjs/toolkit'],
     );
     addPackageToPackageJson(
       host,
       'dependencies',
       'redux',
-      angularReduxPackageMeta.peerDependencies['redux']
+      angularReduxPackageMeta.peerDependencies['redux'],
     );
     addPackageToPackageJson(
       host,
       'dependencies',
       '@reduxjs/angular-redux',
-      angularReduxPackageMeta.version
+      angularReduxPackageMeta.version,
     );
     context.addTask(new NodePackageInstallTask());
     return host;
@@ -137,15 +144,13 @@ function addStandaloneConfig(options: AngularReduxOptions): Rule {
         // exit because the store config is already provided
         return host;
       }
-      const storeProviderOptions =  [
-        ts.factory.createIdentifier('{ store }'),
-      ];
+      const storeProviderOptions = [ts.factory.createIdentifier('{ store }')];
       const patchedConfigFile = addFunctionalProvidersToStandaloneBootstrap(
         host,
         mainFile,
         storeProviderFn,
         '@reduxjs/angular-redux',
-        storeProviderOptions
+        storeProviderOptions,
       );
 
       // insert reducers import into the patched file
@@ -154,12 +159,12 @@ function addStandaloneConfig(options: AngularReduxOptions): Rule {
         patchedConfigFile,
         configFileContent?.toString('utf-8') || '',
         ts.ScriptTarget.Latest,
-        true
+        true,
       );
       const statePath = `/${options.path}/${options.storePath}`;
       const relativePath = buildRelativePath(
         `/${patchedConfigFile}`,
-        statePath
+        statePath,
       );
 
       const recorder = host.beginUpdate(patchedConfigFile);
@@ -168,7 +173,7 @@ function addStandaloneConfig(options: AngularReduxOptions): Rule {
         source,
         patchedConfigFile,
         'store',
-        relativePath
+        relativePath,
       );
 
       if (change instanceof InsertChange) {
@@ -180,7 +185,7 @@ function addStandaloneConfig(options: AngularReduxOptions): Rule {
       return host;
     }
     throw new SchematicsException(
-      `Main file not found for a project ${options.project}`
+      `Main file not found for a project ${options.project}`,
     );
   };
 }

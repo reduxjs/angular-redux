@@ -26,7 +26,7 @@ const defaultLibOptions = {
 
 export function getTestProjectPath(
   workspaceOptions: any = defaultWorkspaceOptions,
-  appOptions: any = defaultAppOptions
+  appOptions: any = defaultAppOptions,
 ) {
   return `/${workspaceOptions.newProjectRoot}/${appOptions.name}`;
 }
@@ -36,33 +36,33 @@ export async function createWorkspace(
   appTree: UnitTestTree,
   workspaceOptions = defaultWorkspaceOptions,
   appOptions = defaultAppOptions,
-  libOptions = defaultLibOptions
+  libOptions = defaultLibOptions,
 ) {
   appTree = await schematicRunner.runExternalSchematic(
     '@schematics/angular',
     'workspace',
-    workspaceOptions
+    workspaceOptions,
   );
 
   appTree = await schematicRunner.runExternalSchematic(
     '@schematics/angular',
     'application',
     appOptions,
-    appTree
+    appTree,
   );
 
   appTree = await schematicRunner.runExternalSchematic(
     '@schematics/angular',
     'application',
     { ...appOptions, name: 'bar-standalone', standalone: true },
-    appTree
+    appTree,
   );
 
   appTree = await schematicRunner.runExternalSchematic(
     '@schematics/angular',
     'library',
     libOptions,
-    appTree
+    appTree,
   );
 
   return appTree;

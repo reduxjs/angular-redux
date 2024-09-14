@@ -3,7 +3,7 @@ id: getting-started
 title: Getting Started with Angular Redux
 hide_title: true
 sidebar_label: Getting Started
-description: 'Introduction > Getting Started: First steps with Angular Redux'
+description: "Introduction > Getting Started: First steps with Angular Redux"
 ---
 
 # Getting Started with Angular Redux
@@ -25,9 +25,9 @@ ng add @reduxjs/angular-redux@latest
 #### Optional `ng add` flags
 
 | flag          | description                                                                                                                                                                         | value type | default value |
-|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|---------------|
-| `--path`      | Path to the module that you wish to add the import for the `provideRedux` to.                                                                                           | `string`   ||
-| `--project`   | Name of the project defined in your `angular.json` to help locating the module to add the `provideRedux` to.                                                                        | `string`   ||
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ------------- |
+| `--path`      | Path to the module that you wish to add the import for the `provideRedux` to.                                                                                                       | `string`   |               |
+| `--project`   | Name of the project defined in your `angular.json` to help locating the module to add the `provideRedux` to.                                                                        | `string`   |               |
 | `--module`    | Name of file containing the module that you wish to add the import for the `provideRedux` to. Can also include the relative path to the file. For example, `src/app/app.module.ts`. | `string`   | `app`         |
 | `--storePath` | The file path to create the state in.                                                                                                                                               | `string`   | `store`       |
 
@@ -50,7 +50,6 @@ npm install @reduxjs/angular-redux
 yarn add @reduxjs/angular-redux
 ```
 
-
 You'll also need to [install Redux](https://redux.js.org/introduction/installation) and [set up a Redux store](https://redux.js.org/recipes/configuring-your-store/) in your app.
 
 Angular-Redux is written in TypeScript, so all types are automatically included.
@@ -62,15 +61,13 @@ Angular-Redux is written in TypeScript, so all types are automatically included.
 Angular Redux includes a `provideRedux` provider factory, which makes the Redux store available to the rest of your app:
 
 ```typescript
-import { bootstrapApplication } from '@angular/platform-browser';
+import { bootstrapApplication } from "@angular/platform-browser";
 import { provideRedux } from "angular-redux";
-import { AppComponent } from './app/app.component';
-import { store } from './store'
+import { AppComponent } from "./app/app.component";
+import { store } from "./store";
 
 bootstrapApplication(AppComponent, {
-  providers: [
-    provideRedux({ store })
-  ]
+  providers: [provideRedux({ store })],
 });
 ```
 
@@ -81,29 +78,25 @@ Angular Redux provides a pair of custom Angular injectable functions that allow 
 `injectSelector` reads a value from the store state and subscribes to updates, while `injectDispatch` returns the store's `dispatch` method to let you dispatch actions.
 
 ```typescript
-import { Component } from '@angular/core'
+import { Component } from "@angular/core";
 import { injectSelector, injectDispatch } from "@reduxjs/angular-redux";
-import { decrement, increment } from './store/counter-slice'
-import { RootState } from './store'
+import { decrement, increment } from "./store/counter-slice";
+import { RootState } from "./store";
 
 @Component({
-  selector: 'app-root',
+  selector: "app-root",
   standalone: true,
   template: `
-      <button (click)="dispatch(increment())">
-        Increment
-      </button>
-      <span>{{ count() }}</span>
-      <button (click)="dispatch(decrement())">
-        Decrement
-      </button>
-  `
+    <button (click)="dispatch(increment())">Increment</button>
+    <span>{{ count() }}</span>
+    <button (click)="dispatch(decrement())">Decrement</button>
+  `,
 })
 export class AppComponent {
-  count = injectSelector((state: RootState) => state.counter.value)
-  dispatch = injectDispatch()
-  increment = increment
-  decrement = decrement
+  count = injectSelector((state: RootState) => state.counter.value);
+  dispatch = injectDispatch();
+  increment = increment;
+  decrement = decrement;
 }
 ```
 

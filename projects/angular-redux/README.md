@@ -21,10 +21,10 @@ ng add @reduxjs/angular-redux@latest
 #### Optional `ng add` flags
 
 | flag          | description                                                                                                                                                                         | value type | default value |
-|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|---------------
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ------------- |
 | `--path`      | Path to the module that you wish to add the import for the StoreModule to.                                                                                                          | `string`   |
 | `--project`   | Name of the project defined in your `angular.json` to help locating the module to add the `provideRedux` to.                                                                        | `string`   |
-| `--module`    | Name of file containing the module that you wish to add the import for the `provideRedux` to. Can also include the relative path to the file. For example, `src/app/app.module.ts`. | `string`   | `app`         
+| `--module`    | Name of file containing the module that you wish to add the import for the `provideRedux` to. Can also include the relative path to the file. For example, `src/app/app.module.ts`. | `string`   | `app`         |
 | `--storePath` | The file path to create the state in.                                                                                                                                               | `string`   | `store`       |
 
 This command will automate the following steps:
@@ -58,28 +58,24 @@ modules](https://webpack.js.org/api/module-methods/#commonjs).
 The following Angular component works as-expected:
 
 ```typescript
-import { Component } from '@angular/core'
+import { Component } from "@angular/core";
 import { injectSelector, injectDispatch } from "@reduxjs/angular-redux";
-import { decrement, increment } from './store/counter-slice'
-import { RootState } from './store'
+import { decrement, increment } from "./store/counter-slice";
+import { RootState } from "./store";
 
 @Component({
-  selector: 'app-root',
+  selector: "app-root",
   standalone: true,
   template: `
-      <button (click)="dispatch(increment())">
-        Increment
-      </button>
-      <span>{{ count() }}</span>
-      <button (click)="dispatch(decrement())">
-        Decrement
-      </button>
-  `
+    <button (click)="dispatch(increment())">Increment</button>
+    <span>{{ count() }}</span>
+    <button (click)="dispatch(decrement())">Decrement</button>
+  `,
 })
 export class AppComponent {
-  count = injectSelector((state: RootState) => state.counter.value)
-  dispatch = injectDispatch()
-  increment = increment
-  decrement = decrement
+  count = injectSelector((state: RootState) => state.counter.value);
+  dispatch = injectDispatch();
+  increment = increment;
+  decrement = decrement;
 }
 ```

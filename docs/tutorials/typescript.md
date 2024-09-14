@@ -40,7 +40,7 @@ This page focuses on just how to set up the TypeScript aspects. For explanations
 Since those are types, it's safe to export them directly from your store setup file such as `app/store.ts` and import them directly into other files.
 
 ```ts title="app/store.ts"
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore } from "@reduxjs/toolkit";
 // ...
 
 const store = configureStore({
@@ -49,13 +49,13 @@ const store = configureStore({
     comments: commentsReducer,
     users: usersReducer,
   },
-})
+});
 
 // highlight-start
 // Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>
+export type RootState = ReturnType<typeof store.getState>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch
+export type AppDispatch = typeof store.dispatch;
 // highlight-end
 ```
 
@@ -69,13 +69,13 @@ While it's possible to import the `RootState` and `AppDispatch` types into each 
 Since these are actual variables, not types, it's important to define them in a separate file such as `app/injectables.ts`, not the store setup file. This allows you to import them into any component file that needs to use the injectables, and avoids potential circular import dependency issues.
 
 ```ts title="app/injectables.ts"
-import { injectDispatch, injectSelector } from '@reduxjs/angular-redux'
-import type { RootState, AppDispatch } from './store'
+import { injectDispatch, injectSelector } from "@reduxjs/angular-redux";
+import type { RootState, AppDispatch } from "./store";
 
 // highlight-start
 // Use throughout your app instead of plain `injectDispatch` and `injectSelector`
-export const injectAppDispatch = injectDispatch.withTypes<AppDispatch>()
-export const injectAppSelector = injectSelector.withTypes<RootState>()
+export const injectAppDispatch = injectDispatch.withTypes<AppDispatch>();
+export const injectAppSelector = injectSelector.withTypes<RootState>();
 // highlight-end
 ```
 
@@ -90,47 +90,47 @@ All generated actions should be defined using the `PayloadAction<T>` type from R
 You can safely import the `RootState` type from the store file here. It's a circular import, but the TypeScript compiler can correctly handle that for types. This may be needed for use cases like writing selector functions.
 
 ```ts title="features/counter/counterSlice.ts"
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import type { RootState } from '../../app/store'
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import type { RootState } from "../../app/store";
 
 // highlight-start
 // Define a type for the slice state
 interface CounterState {
-  value: number
+  value: number;
 }
 
 // Define the initial state using that type
 const initialState: CounterState = {
   value: 0,
-}
+};
 // highlight-end
 
 export const counterSlice = createSlice({
-  name: 'counter',
+  name: "counter",
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
     increment: (state) => {
-      state.value += 1
+      state.value += 1;
     },
     decrement: (state) => {
-      state.value -= 1
+      state.value -= 1;
     },
     // highlight-start
     // Use the PayloadAction type to declare the contents of `action.payload`
     incrementByAmount: (state, action: PayloadAction<number>) => {
       // highlight-end
-      state.value += action.payload
+      state.value += action.payload;
     },
   },
-})
+});
 
-export const { increment, decrement, incrementByAmount } = counterSlice.actions
+export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
-export const selectCount = (state: RootState) => state.counter.value
+export const selectCount = (state: RootState) => state.counter.value;
 
-export default counterSlice.reducer
+export default counterSlice.reducer;
 ```
 
 The generated action creators will be correctly typed to accept a `payload` argument based on the `PayloadAction<T>` type you provided for the reducer. For example, `incrementByAmount` requires a `number` as its argument.
@@ -141,7 +141,7 @@ In some cases, [TypeScript may unnecessarily tighten the type of the initial sta
 // Workaround: cast state instead of declaring variable type
 const initialState = {
   value: 0,
-} as CounterState
+} as CounterState;
 ```
 
 ### Use Typed Injectables in Components
@@ -149,23 +149,23 @@ const initialState = {
 In component files, import the pre-typed injectables instead of the standard injectables from Angular-Redux.
 
 ```typescript title="features/counter/counter.component.ts"
-import { Component } from '@angular/core'
+import { Component } from "@angular/core";
 // highlight-next-line
 import { injectAppSelector, injectAppDispatch } from "app/injectables";
-import { decrement, increment } from './store/counter-slice'
+import { decrement, increment } from "./store/counter-slice";
 
 @Component({
-  selector: 'app-counter',
+  selector: "app-counter",
   standalone: true,
   // omit rendering logic
 })
 export class CounterComponent {
   // highlight-start
   // The `state` arg is correctly typed as `RootState` already
-  count = injectAppSelector(state => state.counter.value)
-  dispatch = injectAppDispatch()
+  count = injectAppSelector((state) => state.counter.value);
+  dispatch = injectAppDispatch();
   // highlight-end
-  increment = increment
-  decrement = decrement
+  increment = increment;
+  decrement = decrement;
 }
 ```

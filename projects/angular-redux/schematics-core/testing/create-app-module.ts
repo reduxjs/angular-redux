@@ -2,7 +2,7 @@ import { UnitTestTree } from '@angular-devkit/schematics/testing';
 
 export function createAppModule(
   tree: UnitTestTree,
-  path?: string
+  path?: string,
 ): UnitTestTree {
   tree.create(
     path || '/src/app/app.module.ts',
@@ -22,7 +22,7 @@ export function createAppModule(
     bootstrap: [AppComponent]
     })
     export class AppModule { }
-  `
+  `,
   );
 
   return tree;
@@ -31,7 +31,7 @@ export function createAppModule(
 export function createAppModuleWithEffects(
   tree: UnitTestTree,
   path: string,
-  effects?: string
+  effects?: string,
 ): UnitTestTree {
   tree.create(
     path || '/src/app/app.module.ts',
@@ -53,7 +53,7 @@ export function createAppModuleWithEffects(
       bootstrap: [AppComponent]
     })
     export class AppModule { }
-  `
+  `,
   );
 
   return tree;

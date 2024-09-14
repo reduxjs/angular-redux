@@ -4,19 +4,19 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useEffect } from 'react'
-import Layout from '@theme/Layout'
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
+import React, { useEffect } from "react";
+import Layout from "@theme/Layout";
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 
 function NotFound() {
-  const context = useDocusaurusContext()
-  const { siteConfig = {} } = context
+  const context = useDocusaurusContext();
+  const { siteConfig = {} } = context;
   useEffect(() => {
-    const script = document.createElement('script')
-    script.src = 'https://buttons.github.io/buttons.js'
-    script.async = true
-    document.body.appendChild(script)
-  }, [])
+    const script = document.createElement("script");
+    script.src = "https://buttons.github.io/buttons.js";
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
 
   const getTrackingScript = () => {
     if (
@@ -24,7 +24,7 @@ function NotFound() {
       !siteConfig.themeConfig.googleAnalytics ||
       !siteConfig.themeConfig.googleAnalytics.gaTrackingId
     ) {
-      return null
+      return null;
     }
 
     return {
@@ -36,9 +36,9 @@ function NotFound() {
         eventAction: window.location.href,
         eventLabel: document.referrer
       });`,
-    }
-  }
-  const trackingScript = getTrackingScript()
+    };
+  };
+  const trackingScript = getTrackingScript();
 
   return (
     <Layout title="Page Not Found">
@@ -53,7 +53,7 @@ function NotFound() {
         </div>
       </div>
     </Layout>
-  )
+  );
 }
 
-export default NotFound
+export default NotFound;

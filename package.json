@@ -12,7 +12,9 @@
     "watch": "ng build --watch --configuration development",
     "test": "yarn test:ng && yarn test:schematics",
     "test:ng": "ng test",
-    "test:schematics": "cd projects/angular-redux/schematics && jest"
+    "test:schematics": "cd projects/angular-redux/schematics && jest",
+    "prettier": "prettier --ignore-unknown .",
+    "prettier:write": "yarn run prettier --write"
   },
   "workspaces": {
     "packages": [
@@ -53,6 +55,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "ng-packagr": "^18.2.0",
+    "prettier": "^3.3.3",
     "ts-jest": "^29.2.5",
     "typescript": "~5.5.2"
   },

@@ -2,166 +2,166 @@
 // well as nesting subscriptions of descendant components, so that we can ensure the
 // ancestor components re-render before descendants
 
-type VoidFunc = () => void
+type VoidFunc = () => void;
 
 type Listener = {
-  callback: VoidFunc
-  next: Listener | null
-  prev: Listener | null
-}
+  callback: VoidFunc;
+  next: Listener | null;
+  prev: Listener | null;
+};
 
 function createListenerCollection() {
-  let first: Listener | null = null
-  let last: Listener | null = null
+  let first: Listener | null = null;
+  let last: Listener | null = null;
 
   return {
     clear() {
-      first = null
-      last = null
+      first = null;
+      last = null;
     },
 
     notify() {
-        let listener = first
-        while (listener) {
-          listener.callback()
-          listener = listener.next
-        }
+      let listener = first;
+      while (listener) {
+        listener.callback();
+        listener = listener.next;
+      }
     },
 
     get() {
-      const listeners: Listener[] = []
-      let listener = first
+      const listeners: Listener[] = [];
+      let listener = first;
       while (listener) {
-        listeners.push(listener)
-        listener = listener.next
+        listeners.push(listener);
+        listener = listener.next;
       }
-      return listeners
+      return listeners;
     },
 
     subscribe(callback: () => void) {
-      let isSubscribed = true
+      let isSubscribed = true;
 
       const listener: Listener = (last = {
         callback,
         next: null,
         prev: last,
-      })
+      });
 
       if (listener.prev) {
-        listener.prev.next = listener
+        listener.prev.next = listener;
       } else {
-        first = listener
+        first = listener;
       }
 
       return function unsubscribe() {
-        if (!isSubscribed || first === null) return
-        isSubscribed = false
+        if (!isSubscribed || first === null) return;
+        isSubscribed = false;
 
         if (listener.next) {
-          listener.next.prev = listener.prev
+          listener.next.prev = listener.prev;
         } else {
-          last = listener.prev
+          last = listener.prev;
         }
         if (listener.prev) {
-          listener.prev.next = listener.next
+          listener.prev.next = listener.next;
         } else {
-          first = listener.next
+          first = listener.next;
         }
-      }
+      };
     },
-  }
+  };
 }
 
-type ListenerCollection = ReturnType<typeof createListenerCollection>
+type ListenerCollection = ReturnType<typeof createListenerCollection>;
 
 export interface Subscription {
-  addNestedSub: (listener: VoidFunc) => VoidFunc
-  notifyNestedSubs: VoidFunc
-  handleChangeWrapper: VoidFunc
-  isSubscribed: () => boolean
-  onStateChange?: VoidFunc | null
-  trySubscribe: VoidFunc
-  tryUnsubscribe: VoidFunc
-  getListeners: () => ListenerCollection
+  addNestedSub: (listener: VoidFunc) => VoidFunc;
+  notifyNestedSubs: VoidFunc;
+  handleChangeWrapper: VoidFunc;
+  isSubscribed: () => boolean;
+  onStateChange?: VoidFunc | null;
+  trySubscribe: VoidFunc;
+  tryUnsubscribe: VoidFunc;
+  getListeners: () => ListenerCollection;
 }
 
 const nullListeners = {
   notify() {},
   get: () => [],
-} as unknown as ListenerCollection
+} as unknown as ListenerCollection;
 
 export function createSubscription(store: any, parentSub?: Subscription) {
-  let unsubscribe: VoidFunc | undefined
-  let listeners: ListenerCollection = nullListeners
+  let unsubscribe: VoidFunc | undefined;
+  let listeners: ListenerCollection = nullListeners;
 
   // Reasons to keep the subscription active
-  let subscriptionsAmount = 0
+  let subscriptionsAmount = 0;
 
   // Is this specific subscription subscribed (or only nested ones?)
-  let selfSubscribed = false
+  let selfSubscribed = false;
 
   function addNestedSub(listener: () => void) {
-    trySubscribe()
+    trySubscribe();
 
-    const cleanupListener = listeners.subscribe(listener)
+    const cleanupListener = listeners.subscribe(listener);
 
     // cleanup nested sub
-    let removed = false
+    let removed = false;
     return () => {
       if (!removed) {
-        removed = true
-        cleanupListener()
-        tryUnsubscribe()
+        removed = true;
+        cleanupListener();
+        tryUnsubscribe();
       }
-    }
+    };
   }
 
   function notifyNestedSubs() {
-    listeners.notify()
+    listeners.notify();
   }
 
   function handleChangeWrapper() {
     if (subscription.onStateChange) {
-      subscription.onStateChange()
+      subscription.onStateChange();
     }
   }
 
   function isSubscribed() {
-    return selfSubscribed
+    return selfSubscribed;
   }
 
   function trySubscribe() {
-    subscriptionsAmount++
+    subscriptionsAmount++;
     if (!unsubscribe) {
       unsubscribe = parentSub
         ? parentSub.addNestedSub(handleChangeWrapper)
-        : store.subscribe(handleChangeWrapper)
+        : store.subscribe(handleChangeWrapper);
 
-      listeners = createListenerCollection()
+      listeners = createListenerCollection();
     }
   }
 
   function tryUnsubscribe() {
-    subscriptionsAmount--
+    subscriptionsAmount--;
     if (unsubscribe && subscriptionsAmount === 0) {
-      unsubscribe()
-      unsubscribe = undefined
-      listeners.clear()
-      listeners = nullListeners
+      unsubscribe();
+      unsubscribe = undefined;
+      listeners.clear();
+      listeners = nullListeners;
     }
   }
 
   function trySubscribeSelf() {
     if (!selfSubscribed) {
-      selfSubscribed = true
-      trySubscribe()
+      selfSubscribed = true;
+      trySubscribe();
     }
   }
 
   function tryUnsubscribeSelf() {
     if (selfSubscribed) {
-      selfSubscribed = false
-      tryUnsubscribe()
+      selfSubscribed = false;
+      tryUnsubscribe();
     }
   }
 
@@ -173,7 +173,7 @@ export function createSubscription(store: any, parentSub?: Subscription) {
     trySubscribe: trySubscribeSelf,
     tryUnsubscribe: tryUnsubscribeSelf,
     getListeners: () => listeners,
-  }
+  };
 
-  return subscription
+  return subscription;
 }

@@ -30,7 +30,7 @@ export interface ModuleOptions {
  */
 export function findModuleFromOptions(
   host: Tree,
-  options: ModuleOptions
+  options: ModuleOptions,
 ): Path | undefined {
   if (options.hasOwnProperty('skipImport') && options.skipImport) {
     return undefined;
@@ -71,7 +71,7 @@ export function findModule(host: Tree, generateDir: string): Path {
 
   while (dir) {
     const matches = dir.subfiles.filter(
-      (p) => moduleRe.test(p) && !routingModuleRe.test(p)
+      (p) => moduleRe.test(p) && !routingModuleRe.test(p),
     );
 
     if (matches.length == 1) {
@@ -79,7 +79,7 @@ export function findModule(host: Tree, generateDir: string): Path {
     } else if (matches.length > 1) {
       throw new Error(
         'More than one module matches. Use skip-import option to skip importing ' +
-          'the component into the closest module.'
+          'the component into the closest module.',
       );
     }
 
@@ -88,7 +88,7 @@ export function findModule(host: Tree, generateDir: string): Path {
 
   throw new Error(
     'Could not find an NgModule. Use the skip-import ' +
-      'option to skip importing in NgModule.'
+      'option to skip importing in NgModule.',
   );
 }
 

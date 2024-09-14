@@ -13,7 +13,11 @@
     "skipLibCheck": true,
     "strict": true
   },
-  "include": ["migrations/**/*.ts", "schematics/**/*.ts", "schematics-core/**/*.ts"],
+  "include": [
+    "migrations/**/*.ts",
+    "schematics/**/*.ts",
+    "schematics-core/**/*.ts"
+  ],
   "exclude": ["**/*.spec.ts"],
   "angularCompilerOptions": {
     "skipMetadataEmit": true,

@@ -30,7 +30,7 @@ export interface ComponentOptions {
  */
 export function findComponentFromOptions(
   host: Tree,
-  options: ComponentOptions
+  options: ComponentOptions,
 ): Path | undefined {
   if (options.hasOwnProperty('skipImport') && options.skipImport) {
     return undefined;
@@ -44,7 +44,7 @@ export function findComponentFromOptions(
     return normalize(findComponent(host, pathToCheck));
   } else {
     const componentPath = normalize(
-      '/' + options.path + '/' + options.component
+      '/' + options.path + '/' + options.component,
     );
     const componentBaseName = normalize(componentPath).split('/').pop();
 
@@ -58,11 +58,11 @@ export function findComponentFromOptions(
       host.exists(componentPath + '/' + componentBaseName + '.component.ts')
     ) {
       return normalize(
-        componentPath + '/' + componentBaseName + '.component.ts'
+        componentPath + '/' + componentBaseName + '.component.ts',
       );
     } else {
       throw new Error(
-        `Specified component path ${componentPath} does not exist`
+        `Specified component path ${componentPath} does not exist`,
       );
     }
   }
@@ -84,7 +84,7 @@ export function findComponent(host: Tree, generateDir: string): Path {
     } else if (matches.length > 1) {
       throw new Error(
         'More than one component matches. Use skip-import option to skip importing ' +
-          'the component store into the closest component.'
+          'the component store into the closest component.',
       );
     }
 
@@ -93,7 +93,7 @@ export function findComponent(host: Tree, generateDir: string): Path {
 
   throw new Error(
     'Could not find an Component. Use the skip-import ' +
-      'option to skip importing in Component.'
+      'option to skip importing in Component.',
   );
 }
 

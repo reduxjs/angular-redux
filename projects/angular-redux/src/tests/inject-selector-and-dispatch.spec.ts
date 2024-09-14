@@ -1,9 +1,9 @@
-import { Component } from '@angular/core'
-import { render } from '@testing-library/angular'
-import '@testing-library/jest-dom'
-import { configureStore, createSlice } from '@reduxjs/toolkit'
-import { provideRedux, injectDispatch, injectSelector } from '../public-api'
-import { userEvent } from '@testing-library/user-event'
+import { Component } from '@angular/core';
+import { render } from '@testing-library/angular';
+import '@testing-library/jest-dom';
+import { configureStore, createSlice } from '@reduxjs/toolkit';
+import { provideRedux, injectDispatch, injectSelector } from '../public-api';
+import { userEvent } from '@testing-library/user-event';
 
 const user = userEvent.setup();
 
@@ -14,10 +14,10 @@ const counterSlice = createSlice({
   },
   reducers: {
     increment: (state) => {
-      state.value += 1
-    }
+      state.value += 1;
+    },
   },
-})
+});
 
 @Component({
   selector: 'app-root',
@@ -25,21 +25,18 @@ const counterSlice = createSlice({
   template: `
     <div>
       <div>
-        <button
-          aria-label="Increment value"
-          (click)="dispatch(increment())"
-        >
+        <button aria-label="Increment value" (click)="dispatch(increment())">
           Increment
         </button>
         <span>Count: {{ count() }}</span>
       </div>
     </div>
-  `
+  `,
 })
 export class AppComponent {
-  count = injectSelector((state: any) => state.counter.value)
-  dispatch = injectDispatch()
-  increment = counterSlice.actions.increment
+  count = injectSelector((state: any) => state.counter.value);
+  dispatch = injectDispatch();
+  increment = counterSlice.actions.increment;
 }
 
 it('injectSelector should work without reactivity', async () => {
@@ -47,29 +44,29 @@ it('injectSelector should work without reactivity', async () => {
     reducer: {
       counter: counterSlice.reducer,
     },
-  })
+  });
 
-  const {getByText} = await render(AppComponent, {
-    providers: [provideRedux({store})]
-  })
+  const { getByText } = await render(AppComponent, {
+    providers: [provideRedux({ store })],
+  });
 
-  expect(getByText("Count: 0")).toBeInTheDocument();
-})
+  expect(getByText('Count: 0')).toBeInTheDocument();
+});
 
 it('injectSelector should work with reactivity', async () => {
   const store = configureStore({
     reducer: {
       counter: counterSlice.reducer,
     },
-  })
+  });
 
-  const {getByText, getByLabelText} = await render(AppComponent, {
-    providers: [provideRedux({store})]
-  })
+  const { getByText, getByLabelText } = await render(AppComponent, {
+    providers: [provideRedux({ store })],
+  });
 
-  expect(getByText("Count: 0")).toBeInTheDocument();
+  expect(getByText('Count: 0')).toBeInTheDocument();
 
-  await user.click(getByLabelText("Increment value"))
+  await user.click(getByLabelText('Increment value'));
 
-  expect(getByText("Count: 1")).toBeInTheDocument();
-})
+  expect(getByText('Count: 1')).toBeInTheDocument();
+});

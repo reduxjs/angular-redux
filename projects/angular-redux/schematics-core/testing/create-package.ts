@@ -11,7 +11,7 @@ export function createPackageJson(
   pkg: string,
   tree: UnitTestTree,
   version = '5.2.0',
-  packagePath = '/package.json'
+  packagePath = '/package.json',
 ) {
   tree.create(
     packagePath,
@@ -19,7 +19,7 @@ export function createPackageJson(
       "dependencies": {
         "@ngrx/${pkg}": "${prefix}${version}"
       }
-    }`
+    }`,
   );
 
   return tree;

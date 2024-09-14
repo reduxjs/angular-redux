@@ -48,11 +48,11 @@ npm install @reduxjs/toolkit angular-redux
 Create a file named `src/app/store.ts`. Import the `configureStore` API from Redux Toolkit. We'll start by creating an empty Redux store, and exporting it:
 
 ```typescript title="app/store.ts"
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore } from "@reduxjs/toolkit";
 
 export default configureStore({
   reducer: {},
-})
+});
 ```
 
 This creates a Redux store, and also automatically configure the Redux DevTools extension so that you can inspect the store while developing.
@@ -62,19 +62,18 @@ This creates a Redux store, and also automatically configure the Redux DevTools 
 Once the store is created, we can make it available to our Angular components by putting an Angular Redux `provideRedux` in our application's `providers` array in `src/main.ts`. Import the Redux store we just created, put a `provideRedux` in your application's `providers` array, and pass the store as a prop:
 
 ```typescript title="main.ts"
-
-import { bootstrapApplication } from '@angular/platform-browser';
-import { AppComponent } from './app/app.component';
+import { bootstrapApplication } from "@angular/platform-browser";
+import { AppComponent } from "./app/app.component";
 // highlight-start
 import { provideRedux } from "angular-redux";
-import { store } from './store'
+import { store } from "./store";
 // highlight-end
 
 bootstrapApplication(AppComponent, {
   providers: [
     // highlight-next-line
-    provideRedux({ store })
-  ]
+    provideRedux({ store }),
+  ],
 });
 ```
 
@@ -87,10 +86,10 @@ Creating a slice requires a string name to identify the slice, an initial state 
 Redux requires that [we write all state updates immutably, by making copies of data and updating the copies](https://redux.js.org/tutorials/fundamentals/part-2-concepts-data-flow#immutability). However, Redux Toolkit's `createSlice` and `createReducer` APIs use [Immer](https://immerjs.github.io/immer/) inside to allow us to [write "mutating" update logic that becomes correct immutable updates](https://redux.js.org/tutorials/fundamentals/part-8-modern-redux#immutable-updates-with-immer).
 
 ```js title="features/counter/counterSlice.ts"
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
 export const counterSlice = createSlice({
-  name: 'counter',
+  name: "counter",
   initialState: {
     value: 0,
   },
@@ -101,21 +100,21 @@ export const counterSlice = createSlice({
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes.
       // Also, no return statement is required from these functions.
-      state.value += 1
+      state.value += 1;
     },
     decrement: (state) => {
-      state.value -= 1
+      state.value -= 1;
     },
     incrementByAmount: (state, action) => {
-      state.value += action.payload
+      state.value += action.payload;
     },
   },
-})
+});
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = counterSlice.actions
+export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 
-export default counterSlice.reducer
+export default counterSlice.reducer;
 ```
 
 ### Add Slice Reducers to the Store
@@ -123,16 +122,16 @@ export default counterSlice.reducer
 Next, we need to import the reducer function from the counter slice and add it to our store. By defining a field inside the `reducer` parameter, we tell the store to use this slice reducer function to handle all updates to that state.
 
 ```js title="app/store.ts"
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore } from "@reduxjs/toolkit";
 // highlight-next-line
-import counterReducer from '../features/counter/counterSlice'
+import counterReducer from "../features/counter/counterSlice";
 
 export default configureStore({
   reducer: {
     // highlight-next-line
     counter: counterReducer,
   },
-})
+});
 ```
 
 ### Use Redux State and Actions in Angular Components
@@ -140,29 +139,25 @@ export default configureStore({
 Now we can use the Angular Redux inject functions to let Angular components interact with the Redux store. We can read data from the store with `useSelector`, and dispatch actions using `useDispatch`. Create a `src/features/counter/counter.component.ts` file with a `<app-counter>` component inside, then import that component into `app.component.ts` and render it inside of `<app-root>`.
 
 ```typescript title="features/counter/counter.component.ts"
-import { Component } from '@angular/core'
+import { Component } from "@angular/core";
 import { injectSelector, injectDispatch } from "@reduxjs/angular-redux";
-import { decrement, increment } from './store/counter-slice'
-import { RootState } from './store'
+import { decrement, increment } from "./store/counter-slice";
+import { RootState } from "./store";
 
 @Component({
-  selector: 'app-counter',
+  selector: "app-counter",
   standalone: true,
   template: `
-      <button (click)="dispatch(increment())">
-        Increment
-      </button>
-      <span>{{ count() }}</span>
-      <button (click)="dispatch(decrement())">
-        Decrement
-      </button>
-  `
+    <button (click)="dispatch(increment())">Increment</button>
+    <span>{{ count() }}</span>
+    <button (click)="dispatch(decrement())">Decrement</button>
+  `,
 })
 export class CounterComponent {
-  count = injectSelector((state: RootState) => state.counter.value)
-  dispatch = injectDispatch()
-  increment = increment
-  decrement = decrement
+  count = injectSelector((state: RootState) => state.counter.value);
+  dispatch = injectDispatch();
+  increment = increment;
+  decrement = decrement;
 }
 ```
 

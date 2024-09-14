@@ -7,7 +7,7 @@ export function addPackageToPackageJson(
   host: Tree,
   type: string,
   pkg: string,
-  version: string
+  version: string,
 ): Tree {
   if (host.exists('package.json')) {
     const sourceText = host.read('package.json')?.toString('utf-8') ?? '{}';

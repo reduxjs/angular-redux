@@ -13,7 +13,7 @@ export interface WorkspaceProject {
 
 export function getProject(
   host: Tree,
-  options: { project?: string | undefined; path?: string | undefined }
+  options: { project?: string | undefined; path?: string | undefined },
 ): WorkspaceProject {
   const workspace = getWorkspace(host);
 
@@ -31,7 +31,7 @@ export function getProject(
 
 export function getProjectPath(
   host: Tree,
-  options: { project?: string | undefined; path?: string | undefined }
+  options: { project?: string | undefined; path?: string | undefined },
 ) {
   const project = getProject(host, options);
 
@@ -51,7 +51,7 @@ export function getProjectPath(
 
 export function isLib(
   host: Tree,
-  options: { project?: string | undefined; path?: string | undefined }
+  options: { project?: string | undefined; path?: string | undefined },
 ) {
   const project = getProject(host, options);
 
@@ -60,7 +60,7 @@ export function isLib(
 
 export function getProjectMainFile(
   host: Tree,
-  options: { project?: string | undefined; path?: string | undefined }
+  options: { project?: string | undefined; path?: string | undefined },
 ) {
   if (isLib(host, options)) {
     throw new SchematicsException(`Invalid project type`);

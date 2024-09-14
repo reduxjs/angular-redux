@@ -40,7 +40,7 @@
   max-width: 80px;
 }
 
-html[data-theme='dark'] .blockImage img {
+html[data-theme="dark"] .blockImage img {
   filter: invert(100%);
 }
 

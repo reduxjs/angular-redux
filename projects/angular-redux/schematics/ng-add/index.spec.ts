@@ -12,12 +12,12 @@ import {
 describe('Store ng-add Schematic', () => {
   const schematicRunner = new SchematicTestRunner(
     '@reduxjs/angular-redux',
-    path.join(__dirname, '../collection.json')
+    path.join(__dirname, '../collection.json'),
   );
   const defaultOptions: AngularReduxOptions = {
     skipPackageJson: false,
     project: 'bar',
-    module: 'app'
+    module: 'app',
   };
 
   const projectPath = getTestProjectPath();
@@ -56,7 +56,7 @@ describe('Store ng-add Schematic', () => {
     const tree = await schematicRunner.runSchematic('ng-add', options, appTree);
     const files = tree.files;
     expect(
-      files.indexOf(`${projectPath}/src/app/store/index.ts`)
+      files.indexOf(`${projectPath}/src/app/store/index.ts`),
     ).toBeGreaterThanOrEqual(0);
   });
 
@@ -65,9 +65,7 @@ describe('Store ng-add Schematic', () => {
 
     const tree = await schematicRunner.runSchematic('ng-add', options, appTree);
     const content = tree.readContent(`${projectPath}/src/app/app.module.ts`);
-    expect(content).toMatch(
-      /import { store } from '\.\/store';/
-    );
+    expect(content).toMatch(/import { store } from '\.\/store';/);
   });
 
   it('should fail if specified module does not exist', async () => {
@@ -95,18 +93,16 @@ describe('Store ng-add Schematic', () => {
       const tree = await schematicRunner.runSchematic(
         'ng-add',
         options,
-        appTree
+        appTree,
       );
 
       const content = tree.readContent(`${projectPath}/src/app/app.config.ts`);
       const files = tree.files;
 
       expect(content).toMatch(/provideRedux\(\{ store \}\)/);
-      expect(content).toMatch(
-        /import { store } from '\.\/store';/
-      );
+      expect(content).toMatch(/import { store } from '\.\/store';/);
       expect(files.indexOf(`${projectPath}/src/app/store/index.ts`)).not.toBe(
-        -1
+        -1,
       );
     });
   });

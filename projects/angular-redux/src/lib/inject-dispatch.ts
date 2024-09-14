@@ -1,7 +1,6 @@
-import type { Dispatch, UnknownAction, Action } from 'redux'
-import { assertInInjectionContext } from '@angular/core'
-import { injectStore } from './inject-store'
-
+import type { Dispatch, UnknownAction, Action } from 'redux';
+import { assertInInjectionContext } from '@angular/core';
+import { injectStore } from './inject-store';
 
 /**
  * Represents a custom injection that provides a dispatch function
@@ -21,7 +20,7 @@ export interface InjectDispatch<
    *
    * @template AppDispatch - The specific type of the dispatch function.
    */
-    <AppDispatch extends DispatchType = DispatchType>(): AppDispatch
+  <AppDispatch extends DispatchType = DispatchType>(): AppDispatch;
 
   /**
    * Creates a "pre-typed" version of {@linkcode injectDispatch injectDispatch}
@@ -41,7 +40,7 @@ export interface InjectDispatch<
    */
   withTypes: <
     OverrideDispatchType extends DispatchType,
-  >() => InjectDispatch<OverrideDispatchType>
+  >() => InjectDispatch<OverrideDispatchType>;
 }
 
 /**
@@ -52,17 +51,19 @@ export interface InjectDispatch<
 export function createDispatchInjection<
   ActionType extends Action = UnknownAction,
 >() {
-  const injectDispatch = <AppDispatch extends Dispatch<UnknownAction> = Dispatch<UnknownAction>>(): AppDispatch  => {
-    assertInInjectionContext(injectDispatch)
+  const injectDispatch = <
+    AppDispatch extends Dispatch<UnknownAction> = Dispatch<UnknownAction>,
+  >(): AppDispatch => {
+    assertInInjectionContext(injectDispatch);
     const store = injectStore();
-    return store.dispatch as AppDispatch
-  }
+    return store.dispatch as AppDispatch;
+  };
 
   Object.assign(injectDispatch, {
     withTypes: () => injectDispatch,
-  })
+  });
 
-  return injectDispatch as InjectDispatch<Dispatch<ActionType>>
+  return injectDispatch as InjectDispatch<Dispatch<ActionType>>;
 }
 
 /**
@@ -88,4 +89,4 @@ export function createDispatchInjection<
  *   increaseCounter = () => dispatch({ type: 'increase-counter' })
  * }
  */
-export const injectDispatch = /* #__PURE__*/ createDispatchInjection()
+export const injectDispatch = /* #__PURE__*/ createDispatchInjection();
