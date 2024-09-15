@@ -79,13 +79,13 @@ bootstrapApplication(AppComponent, {
 
 ### Create a Redux State Slice
 
-Add a new file named `src/features/counter/counterSlice.ts`. In that file, import the `createSlice` API from Redux Toolkit.
+Add a new file named `src/features/counter/counter-slice.ts`. In that file, import the `createSlice` API from Redux Toolkit.
 
 Creating a slice requires a string name to identify the slice, an initial state value, and one or more reducer functions to define how the state can be updated. Once a slice is created, we can export the generated Redux action creators and the reducer function for the whole slice.
 
 Redux requires that [we write all state updates immutably, by making copies of data and updating the copies](https://redux.js.org/tutorials/fundamentals/part-2-concepts-data-flow#immutability). However, Redux Toolkit's `createSlice` and `createReducer` APIs use [Immer](https://immerjs.github.io/immer/) inside to allow us to [write "mutating" update logic that becomes correct immutable updates](https://redux.js.org/tutorials/fundamentals/part-8-modern-redux#immutable-updates-with-immer).
 
-```js title="features/counter/counterSlice.ts"
+```js title="features/counter/counter-slice.ts"
 import { createSlice } from "@reduxjs/toolkit";
 
 export const counterSlice = createSlice({
@@ -124,7 +124,12 @@ Next, we need to import the reducer function from the counter slice and add it t
 ```js title="app/store.ts"
 import { configureStore } from "@reduxjs/toolkit";
 // highlight-next-line
-import counterReducer from "../features/counter/counterSlice";
+import counterReducer from "./features/counter/counter-slice";
+
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>;
+// Inferred type: {counter: CounterState}
+export type AppDispatch = typeof store.dispatch;
 
 export default configureStore({
   reducer: {
@@ -141,8 +146,8 @@ Now we can use the Angular Redux inject functions to let Angular components inte
 ```typescript title="features/counter/counter.component.ts"
 import { Component } from "@angular/core";
 import { injectSelector, injectDispatch } from "@reduxjs/angular-redux";
-import { decrement, increment } from "./store/counter-slice";
-import { RootState } from "./store";
+import { RootState } from "../../store";
+import { decrement, increment } from "./counter-slice";
 
 @Component({
   selector: "app-counter",
@@ -191,12 +196,12 @@ That was a brief overview of how to set up and use Redux Toolkit with Angular. R
 
 ### Full Counter App Example
 
-Here's the complete Counter application as a running CodeSandbox:
+Here's the complete Counter application as a running StackBlitz:
 
 <iframe
   class="codesandbox"
-  src="https://codesandbox.io/embed/github/reduxjs/redux-essentials-counter-example/tree/master/?fontsize=14&hidenavigation=1&module=%2Fsrc%2Ffeatures%2Fcounter%2FcounterSlice.js&theme=dark&runonclick=1"
-  title="redux-essentials-example"
+  src="https://stackblitz.com/github/reduxjs/angular-redux-essentials-counter-example/tree/main?template=node&ctl=1&embed=1&file=src%2Fapp%2Ffeatures%2Fcounter%2Fcounter-slice.ts&hideNavigation=1&view=preview"
+  title="angular-redux-essentials-example"
   allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media; usb"
   sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
 ></iframe>
