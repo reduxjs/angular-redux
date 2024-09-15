@@ -5,6 +5,7 @@ Performant and flexible.
 
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/reduxjs/angular-redux/test.yml?style=flat-square) [![npm version](https://img.shields.io/npm/v/@reduxjs/angular-redux.svg?style=flat-square)](https://www.npmjs.com/package/@reduxjs/angular-redux)
 [![npm downloads](https://img.shields.io/npm/dm/@reduxjs/angular-redux.svg?style=flat-square)](https://www.npmjs.com/package/@reduxjs/angular-redux)
+[![#redux channel on Discord](https://img.shields.io/badge/discord-redux@reactiflux-61DAFB.svg?style=flat-square)](http://www.reactiflux.com)
 
 ## Installation
 
@@ -48,34 +49,10 @@ yarn add @reduxjs/angular-redux
 
 You'll also need to [install Redux](https://redux.js.org/introduction/installation) and [set up a Redux store](https://redux.js.org/recipes/configuring-your-store/) in your app.
 
-This assumes that you’re using [npm](http://npmjs.com/) package manager
-with a module bundler like [Webpack](https://webpack.js.org/) or
-[Browserify](http://browserify.org/) to consume [CommonJS
-modules](https://webpack.js.org/api/module-methods/#commonjs).
+## Documentation
 
-# Usage
+The React Redux docs are published at **https://angular-redux.js.org** .
 
-The following Angular component works as-expected:
+## License
 
-```typescript
-import { Component } from "@angular/core";
-import { injectSelector, injectDispatch } from "@reduxjs/angular-redux";
-import { decrement, increment } from "./store/counter-slice";
-import { RootState } from "./store";
-
-@Component({
-  selector: "app-root",
-  standalone: true,
-  template: `
-    <button (click)="dispatch(increment())">Increment</button>
-    <span>{{ count() }}</span>
-    <button (click)="dispatch(decrement())">Decrement</button>
-  `,
-})
-export class AppComponent {
-  count = injectSelector((state: RootState) => state.counter.value);
-  dispatch = injectDispatch();
-  increment = increment;
-  decrement = decrement;
-}
-```
+[MIT](LICENSE.md)
