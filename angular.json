@@ -34,7 +34,7 @@
         }
       }
     },
-    "angular-redux-demo": {
+    "angular-redux-simple-demo": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -64,25 +64,25 @@
           "skipTests": true
         }
       },
-      "root": "projects/angular-redux-demo",
-      "sourceRoot": "projects/angular-redux-demo/src",
+      "root": "projects/angular-redux-simple-demo",
+      "sourceRoot": "projects/angular-redux-simple-demo/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/angular-redux-demo",
-            "index": "projects/angular-redux-demo/src/index.html",
-            "browser": "projects/angular-redux-demo/src/main.ts",
+            "outputPath": "dist/angular-redux-simple-demo",
+            "index": "projects/angular-redux-simple-demo/src/index.html",
+            "browser": "projects/angular-redux-simple-demo/src/main.ts",
             "polyfills": ["zone.js"],
-            "tsConfig": "projects/angular-redux-demo/tsconfig.app.json",
+            "tsConfig": "projects/angular-redux-simple-demo/tsconfig.app.json",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "projects/angular-redux-demo/public"
+                "input": "projects/angular-redux-simple-demo/public"
               }
             ],
-            "styles": ["projects/angular-redux-demo/src/styles.css"],
+            "styles": ["projects/angular-redux-simple-demo/src/styles.css"],
             "scripts": []
           },
           "configurations": {
@@ -113,10 +113,79 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "angular-redux-demo:build:production"
+              "buildTarget": "angular-redux-simple-demo:build:production"
             },
             "development": {
-              "buildTarget": "angular-redux-demo:build:development"
+              "buildTarget": "angular-redux-simple-demo:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n"
+        }
+      }
+    },
+    "angular-redux-injector-demo": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "projects/angular-redux-injector-demo",
+      "sourceRoot": "projects/angular-redux-injector-demo/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/angular-redux-injector-demo",
+            "index": "projects/angular-redux-injector-demo/src/index.html",
+            "browser": "projects/angular-redux-injector-demo/src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "projects/angular-redux-injector-demo/tsconfig.app.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/angular-redux-injector-demo/public"
+              }
+            ],
+            "styles": [
+              "projects/angular-redux-injector-demo/src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kB",
+                  "maximumError": "4kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "angular-redux-injector-demo:build:production"
+            },
+            "development": {
+              "buildTarget": "angular-redux-injector-demo:build:development"
             }
           },
           "defaultConfiguration": "development"
