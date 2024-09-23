@@ -125,6 +125,95 @@
           "builder": "@angular-devkit/build-angular:extract-i18n"
         }
       }
+    },
+    "angular-redux-injector-demo": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "projects/angular-redux-injector-demo",
+      "sourceRoot": "projects/angular-redux-injector-demo/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/angular-redux-injector-demo",
+            "index": "projects/angular-redux-injector-demo/src/index.html",
+            "browser": "projects/angular-redux-injector-demo/src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "projects/angular-redux-injector-demo/tsconfig.app.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/angular-redux-injector-demo/public"
+              }
+            ],
+            "styles": [
+              "projects/angular-redux-injector-demo/src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kB",
+                  "maximumError": "4kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "angular-redux-injector-demo:build:production"
+            },
+            "development": {
+              "buildTarget": "angular-redux-injector-demo:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "projects/angular-redux-injector-demo/tsconfig.spec.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/angular-redux-injector-demo/public"
+              }
+            ],
+            "styles": [
+              "projects/angular-redux-injector-demo/src/styles.css"
+            ],
+            "scripts": []
+          }
+        }
+      }
     }
   }
 }
