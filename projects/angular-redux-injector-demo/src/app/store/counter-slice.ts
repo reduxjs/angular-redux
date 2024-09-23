@@ -1,34 +1,18 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import {
-  EnvironmentInjector,
-  inject,
-  runInInjectionContext,
-} from '@angular/core';
+import { inject } from '@angular/core';
 import { RandomNumberService } from '../services/random-number.service';
-
-interface IncrementByAmountFromServiceProps {
-  injector: EnvironmentInjector;
-}
+import {
+  asyncRunInInjectionContext,
+  RunInInjectionContextProps,
+} from '../utils/async-run-in-injection-context';
 
 export const incrementByRandomNumber = createAsyncThunk(
   'counter/incrementByAmountFromService',
-  (arg: IncrementByAmountFromServiceProps, _thunkAPI) => {
-    return new Promise<number>((resolve, reject) => {
-      runInInjectionContext(arg.injector, () => {
-        const runValue = async () => {
-          const service = inject(RandomNumberService);
-          const newCount = await service.getRandomNumber();
-          return newCount;
-        };
-
-        runValue()
-          .then((value) => {
-            resolve(value);
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
+  (arg: RunInInjectionContextProps<{}>, _thunkAPI) => {
+    return asyncRunInInjectionContext(arg.injector, async () => {
+      const service = inject(RandomNumberService);
+      const newCount = await service.getRandomNumber();
+      return newCount;
     });
   },
 );
