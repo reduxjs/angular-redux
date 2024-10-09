@@ -17,8 +17,6 @@ export const asyncRunInInjectionContext = <TReturn>(
   });
 };
 
-export type RunInInjectionContextProps<
-  T extends object,
-> = T & {
+export type RunInInjectionContextProps<T extends object> = T & {
   injector: EnvironmentInjector;
 };

@@ -60,7 +60,6 @@ After you have submitted your pull request, we'll try to get back to you as soon
 
 Thank you for contributing!
 
-
 # Cutting a release
 
 If you are a maintainer and want to cut a release, follow these steps:
