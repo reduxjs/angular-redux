@@ -139,9 +139,7 @@
             "outputPath": "dist/angular-redux-injector-demo",
             "index": "projects/angular-redux-injector-demo/src/index.html",
             "browser": "projects/angular-redux-injector-demo/src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "projects/angular-redux-injector-demo/tsconfig.app.json",
             "assets": [
               {
@@ -149,9 +147,7 @@
                 "input": "projects/angular-redux-injector-demo/public"
               }
             ],
-            "styles": [
-              "projects/angular-redux-injector-demo/src/styles.css"
-            ],
+            "styles": ["projects/angular-redux-injector-demo/src/styles.css"],
             "scripts": []
           },
           "configurations": {

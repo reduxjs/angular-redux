@@ -1,6 +1,7 @@
 import { EqualityFn } from './types';
 import {
   assertInInjectionContext,
+  DestroyRef,
   effect,
   inject,
   Signal,
@@ -80,6 +81,7 @@ export function createSelectorInjection(): InjectSelector {
   ): Signal<Selected> => {
     assertInInjectionContext(injectSelector);
     const reduxContext = inject(ReduxProvider);
+    const destroyRef = inject(DestroyRef);
 
     const { equalityFn = refEquality } =
       typeof equalityFnOrOptions === 'function'
@@ -90,19 +92,17 @@ export function createSelectorInjection(): InjectSelector {
 
     const selectedState = signal(selector(store.getState()));
 
-    effect((onCleanup) => {
-      const unsubscribe = subscription.addNestedSub(() => {
-        const data = selector(store.getState());
-        if (equalityFn(selectedState(), data)) {
-          return;
-        }
+    const unsubscribe = subscription.addNestedSub(() => {
+      const data = selector(store.getState());
+      if (equalityFn(selectedState(), data)) {
+        return;
+      }
 
-        selectedState.set(data);
-      });
+      selectedState.set(data);
+    });
 
-      onCleanup(() => {
-        unsubscribe();
-      });
+    destroyRef.onDestroy(() => {
+      unsubscribe();
     });
 
     return selectedState;

@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { render } from '@testing-library/angular';
+import { render, waitFor } from '@testing-library/angular';
 import '@testing-library/jest-dom';
 import { configureStore, createSlice } from '@reduxjs/toolkit';
 import { provideRedux, injectDispatch, injectSelector } from '../public-api';
 import { userEvent } from '@testing-library/user-event';
+import { createStore } from 'redux';
 
 const user = userEvent.setup();
 
@@ -69,4 +70,33 @@ it('injectSelector should work with reactivity', async () => {
   await user.click(getByLabelText('Increment value'));
 
   expect(getByText('Count: 1')).toBeInTheDocument();
+});
+
+it('should show a value dispatched during ngOnInit', async () => {
+  const store = configureStore({
+    reducer: {
+      counter: counterSlice.reducer,
+    },
+  });
+
+  @Component({
+    selector: 'app-root',
+    standalone: true,
+    template: '<p>Count: {{count()}}</p>',
+  })
+  class Comp {
+    count = injectSelector((state: any) => state.counter.value);
+    dispatch = injectDispatch();
+    increment = counterSlice.actions.increment;
+
+    ngOnInit() {
+      this.dispatch(this.increment());
+    }
+  }
+
+  const { getByText } = await render(Comp, {
+    providers: [provideRedux({ store })],
+  });
+
+  await waitFor(() => expect(getByText('Count: 1')).toBeInTheDocument());
 });
