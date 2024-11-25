@@ -12,7 +12,7 @@ description: "Introduction > Getting Started: First steps with Angular Redux"
 
 ## Installation
 
-Angular Redux 8.x requires **Angular 17.3 or later**, in order to make use of Angular Signals.
+Angular Redux 2.x requires **Angular 19 or later**, in order to make use of Angular Signals.
 
 ### Installing with `ng add`
 

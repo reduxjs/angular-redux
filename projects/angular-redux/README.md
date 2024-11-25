@@ -9,7 +9,7 @@ Performant and flexible.
 
 ## Installation
 
-Angular Redux requires **Angular 17.3 or later**.
+Angular Redux requires **Angular 19 or later**.
 
 ### Installing with `ng add`
 
