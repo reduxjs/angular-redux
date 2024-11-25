@@ -319,6 +319,6 @@ describe('performance optimizations and bail-outs', () => {
     store.dispatch({ type: '' });
 
     await waitFor(() => expect(selector).toHaveBeenCalledTimes(2));
-    expect(renderedItems.length).toEqual(2);
+    expect(renderedItems.length).toEqual(1);
   });
 });

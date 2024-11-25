@@ -4,6 +4,7 @@ import {
   DestroyRef,
   effect,
   inject,
+  linkedSignal,
   Signal,
   signal,
 } from '@angular/core';
@@ -90,7 +91,7 @@ export function createSelectorInjection(): InjectSelector {
 
     const { store, subscription } = reduxContext;
 
-    const selectedState = signal(selector(store.getState()));
+    const selectedState = linkedSignal(() => selector(store.getState()));
 
     const unsubscribe = subscription.addNestedSub(() => {
       const data = selector(store.getState());
@@ -105,7 +106,7 @@ export function createSelectorInjection(): InjectSelector {
       unsubscribe();
     });
 
-    return selectedState;
+    return selectedState.asReadonly();
   };
 
   Object.assign(injectSelector, {
