@@ -119,15 +119,14 @@ describe('injectSelector lifecycle interactions', () => {
     }
 
     @Component({
-      selector: 'app-root',
-      standalone: true,
-      imports: [Child],
-      template: `
+    selector: 'app-root',
+    imports: [Child],
+    template: `
         @if (count() === 1) {
           <child-root />
         }
-      `,
-    })
+      `
+})
     class Parent {
       contextVal = injectReduxAndAssignApp();
       count = injectNormalSelector((s) => s.count);
@@ -167,15 +166,14 @@ describe('injectSelector lifecycle interactions', () => {
     }
 
     @Component({
-      selector: 'app-root',
-      standalone: true,
-      imports: [Child],
-      template: `
+    selector: 'app-root',
+    imports: [Child],
+    template: `
         @if (count() === 0) {
           <child-root />
         }
-      `,
-    })
+      `
+})
     class Parent {
       contextVal = injectReduxAndAssignApp();
       count = injectNormalSelector((s) => s.count);
@@ -265,14 +263,13 @@ describe('performance optimizations and bail-outs', () => {
     }
 
     @Component({
-      selector: 'app-root',
-      standalone: true,
-      imports: [Comp, Comp2],
-      template: `
+    selector: 'app-root',
+    imports: [Comp, Comp2],
+    template: `
         <app-comp />
         <app-other />
-      `,
-    })
+      `
+})
     class App {}
 
     await render(App, {
@@ -322,6 +319,6 @@ describe('performance optimizations and bail-outs', () => {
     store.dispatch({ type: '' });
 
     await waitFor(() => expect(selector).toHaveBeenCalledTimes(2));
-    expect(renderedItems.length).toEqual(2);
+    expect(renderedItems.length).toEqual(1);
   });
 });

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { render, waitFor } from '@testing-library/angular';
 import '@testing-library/jest-dom';
 import { configureStore, createSlice } from '@reduxjs/toolkit';
@@ -99,4 +99,45 @@ it('should show a value dispatched during ngOnInit', async () => {
   });
 
   await waitFor(() => expect(getByText('Count: 1')).toBeInTheDocument());
+});
+
+it("should not throw an error on a required input passed to the selector's fn", async () => {
+  const store = configureStore({
+    reducer: {
+      counter: counterSlice.reducer,
+    },
+  });
+
+  @Component({
+    selector: 'app-count-and-add',
+    standalone: true,
+    template: `
+      <button aria-label="Increment value" (click)="dispatch(increment())">
+        Increment
+      </button>
+      <p>Count: {{ count() }}</p>
+    `,
+  })
+  class CountAndAdd {
+    dispatch = injectDispatch();
+    increment = counterSlice.actions.increment;
+    addBy = input.required<number>();
+    count = injectSelector((state: any) => state.counter.value + this.addBy());
+  }
+
+  @Component({
+    selector: 'app-root',
+    imports: [CountAndAdd],
+    standalone: true,
+    template: '<app-count-and-add [addBy]="12"/>',
+  })
+  class App {}
+
+  const { getByText, getByLabelText } = await render(App, {
+    providers: [provideRedux({ store })],
+  });
+
+  await waitFor(() => expect(getByText('Count: 12')).toBeInTheDocument());
+  await user.click(getByLabelText('Increment value'));
+  await waitFor(() => expect(getByText('Count: 13')).toBeInTheDocument());
 });
