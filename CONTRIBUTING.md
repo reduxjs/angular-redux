@@ -1,6 +1,6 @@
 # Contributing
 
-We are open to, and grateful for, any contributions made by the community. By contributing to Angular Redux, you agree to abide by the [code of conduct](https://github.com/reduxjs/angular-redux/blob/master/CODE_OF_CONDUCT.md).
+We are open to, and grateful for, any contributions made by the community. By contributing to Angular Redux, you agree to abide by the [code of conduct](https://github.com/reduxjs/angular-redux/blob/main/CODE_OF_CONDUCT.md).
 
 Please review the [Redux Style Guide](https://redux.js.org/style-guide/style-guide) in the Redux docs to keep track of our best practices.
 
