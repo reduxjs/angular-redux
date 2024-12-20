@@ -190,6 +190,75 @@
           "builder": "@angular-devkit/build-angular:extract-i18n"
         }
       }
+    },
+    "angular-redux-auto-dispatch-demo": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "projects/angular-redux-auto-dispatch-demo",
+      "sourceRoot": "projects/angular-redux-auto-dispatch-demo/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/angular-redux-auto-dispatch-demo",
+            "index": "projects/angular-redux-auto-dispatch-demo/src/index.html",
+            "browser": "projects/angular-redux-auto-dispatch-demo/src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "projects/angular-redux-auto-dispatch-demo/tsconfig.app.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/angular-redux-auto-dispatch-demo/public"
+              }
+            ],
+            "styles": [
+              "projects/angular-redux-auto-dispatch-demo/src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "angular-redux-auto-dispatch-demo:build:production"
+            },
+            "development": {
+              "buildTarget": "angular-redux-auto-dispatch-demo:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n"
+        }
+      }
     }
   }
 }
