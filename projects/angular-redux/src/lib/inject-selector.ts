@@ -91,13 +91,12 @@ export function createSelectorInjection(): InjectSelector {
 
     const { store, subscription } = reduxContext;
 
-    const selectedState = linkedSignal(() => selector(store.getState()));
+    const selectedState = linkedSignal(() => selector(store.getState()), {
+      equal: equalityFn,
+    });
 
     const unsubscribe = subscription.addNestedSub(() => {
       const data = selector(store.getState());
-      if (equalityFn(selectedState(), data)) {
-        return;
-      }
 
       selectedState.set(data);
     });
