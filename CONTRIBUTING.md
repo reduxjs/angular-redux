@@ -65,5 +65,5 @@ Thank you for contributing!
 If you are a maintainer and want to cut a release, follow these steps:
 
 - `yarn build`
-- `cd dist && angular-redux`
+- `cd dist && cd angular-redux`
 - `npm publish`
