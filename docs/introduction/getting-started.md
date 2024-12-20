@@ -62,7 +62,7 @@ Angular Redux includes a `provideRedux` provider factory, which makes the Redux 
 
 ```typescript
 import { bootstrapApplication } from "@angular/platform-browser";
-import { provideRedux } from "angular-redux";
+import { provideRedux } from "@reduxjs/angular-redux";
 import { AppComponent } from "./app/app.component";
 import { store } from "./store";
 

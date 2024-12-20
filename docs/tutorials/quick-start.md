@@ -40,7 +40,7 @@ For this tutorial, we assume that you're using Redux Toolkit and Angular Redux t
 Add the Redux Toolkit and Angular Redux packages to your project:
 
 ```sh
-npm install @reduxjs/toolkit angular-redux
+npm install @reduxjs/toolkit @reduxjs/angular-redux
 ```
 
 ### Create a Redux Store
@@ -65,7 +65,7 @@ Once the store is created, we can make it available to our Angular components by
 import { bootstrapApplication } from "@angular/platform-browser";
 import { AppComponent } from "./app/app.component";
 // highlight-start
-import { provideRedux } from "angular-redux";
+import { provideRedux } from "@reduxjs/angular-redux";
 import { store } from "./store";
 // highlight-end
 
