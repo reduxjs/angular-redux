@@ -185,7 +185,6 @@ That was a brief overview of how to set up and use Redux Toolkit with Angular. R
   - `configureStore` automatically sets up the store with good default settings
 - **Provide the Redux store to the Angular application components**
   - Put a Angular Redux `provideRedux` provider factory in your `bootstrapApplication`'s `providers` array
-  - Pass the Redux store as `<Provider store={store}>`
 - **Create a Redux "slice" reducer with `createSlice`**
   - Call `createSlice` with a string name, an initial state, and named reducer functions
   - Reducer functions may "mutate" the state using Immer
