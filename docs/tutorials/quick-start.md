@@ -126,17 +126,19 @@ import { configureStore } from "@reduxjs/toolkit";
 // highlight-next-line
 import counterReducer from "./features/counter/counter-slice";
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {counter: CounterState}
-export type AppDispatch = typeof store.dispatch;
-
-export default configureStore({
+const store = configureStore({
   reducer: {
     // highlight-next-line
     counter: counterReducer,
   },
 });
+
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>;
+// Inferred type: {counter: CounterState}
+export type AppDispatch = typeof store.dispatch;
+
+export default store;
 ```
 
 ### Use Redux State and Actions in Angular Components
