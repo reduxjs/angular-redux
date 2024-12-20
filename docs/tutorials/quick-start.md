@@ -143,7 +143,7 @@ export default store;
 
 ### Use Redux State and Actions in Angular Components
 
-Now we can use the Angular Redux inject functions to let Angular components interact with the Redux store. We can read data from the store with `useSelector`, and dispatch actions using `useDispatch`. Create a `src/features/counter/counter.component.ts` file with a `<app-counter>` component inside, then import that component into `app.component.ts` and render it inside of `<app-root>`.
+Now we can use the Angular Redux inject functions to let Angular components interact with the Redux store. We can read data from the store with `injectSelector`, and dispatch actions using `injectDispatch`. Create a `src/features/counter/counter.component.ts` file with a `<app-counter>` component inside, then import that component into `app.component.ts` and render it inside of `<app-root>`.
 
 ```typescript title="features/counter/counter.component.ts"
 import { Component } from "@angular/core";
